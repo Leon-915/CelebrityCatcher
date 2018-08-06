@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, Keyboard, ImageBackground, Dimensions, KeyboardAvoidingView } from 'react-native';
+	Image, TextInput, CheckBox, Keyboard, ImageBackground, Dimensions, 
+	KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 import Expo from 'expo';
@@ -95,6 +96,14 @@ export default class CatcherLogin extends Component {
 			subscriber : false,
 			celebrity  : false,
 			
+			userInfo	 : {
+				name  	 : "",
+				email 	 : "",
+				password : "",
+				payment	 : "",
+				phone		 : "",
+			},	
+		
 		};
 	}
 
@@ -147,9 +156,19 @@ export default class CatcherLogin extends Component {
 				"password": this.state.password,
 				"type"    : this.state.type, 
 			}
-
-			console.log("==========", data)
 			
+			AsyncStorage.getItem(this.state.email, (err, result) => {
+				console.log("===result==", JSON.parse(result))
+				
+				let userInfo = Object.assign({}, this.state.userInfo);    //creating copy of object
+				userInfo.name = result.name;                        //updating value
+				userInfo.email = result.email;                        //updating value
+				userInfo.password = result.password;                        //updating value
+				userInfo.phone = result.phone;                        //updating value
+				userInfo.payment = result.payment;                        //updating value
+				this.setState({userInfo});
+			});
+
 			fetch('http://celebritycatcher.com/api/v1/login', {
 				 method: 'POST',
 				 body:  JSON.stringify(data),
@@ -161,10 +180,14 @@ export default class CatcherLogin extends Component {
 			.then((responseJson) => {
 				if(responseJson.status === 200) {
 					Keyboard.dismiss();
-					console.log('========', responseJson);
 					
 					if(this.props.navigation.state.params.id === "Catcher" ) {
-						this.props.navigation.navigate('CatcherProfile', { id: 'Catcher', token: responseJson.data.token });
+						console.log("===login==", this.state.userInfo)
+						this.props.navigation.navigate('CatcherProfile', { 
+								id			 : 'Catcher', 
+								token		 : responseJson.data.token,
+								userInfo : this.state.userInfo, 
+						});
 					}
 
 					if(this.props.navigation.state.params.id === "Subscriber" ) {
@@ -175,7 +198,6 @@ export default class CatcherLogin extends Component {
 						this.props.navigation.navigate('CelebrityProfile', { id: 'Celebrity', token: responseJson.data.token });
 					}
 				}	else { 
-					console.log('========', responseJson);
 					
 					this.setState({emailValid: false});
 					this.setState({passwordValid: false});

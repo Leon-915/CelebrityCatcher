@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, Keyboard, KeyboardAvoidingView, ImageBackground, Dimensions } from 'react-native';
+	Image, TextInput, CheckBox, Keyboard, KeyboardAvoidingView, 
+	ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 
@@ -29,6 +30,15 @@ export default class CatcherSignup extends Component {
 			catcher    : false,
 			subscriber : false,
 			celebrity  : false,
+
+			userInfo	 : {
+				name  	 : "",
+				email 	 : "",
+				password : "",
+				payment	 : "",
+				phone		 : "",
+			},
+
 		};
 
 	}
@@ -45,6 +55,8 @@ export default class CatcherSignup extends Component {
 		if(this.props.navigation.state.params.id === 'Celebrity') {
 			this.setState({ celebrity: true });
 		}
+
+		
 	}
 
 	_submit = () => {
@@ -73,7 +85,6 @@ export default class CatcherSignup extends Component {
 			this.setState({ paymentValid: false })
 		}
 
-
 		if(this.state.nameValid && this.state.emailValid && this.state.phoneValid 
 			&& this.state.passwordValid && this.state.confirmPassValid && this.state.paymentValid 
 			&& this.state.name && this.state.email && this.state.phone && this.state.password 
@@ -81,13 +92,24 @@ export default class CatcherSignup extends Component {
 			
 			if(this.props.navigation.state.params.id === 'Catcher') {
 				var data = {
-					"name": this.state.name,
-					"email"   : this.state.email,
-					"password": this.state.password,
-					"phone": this.state.phone,
-					"paypal_link": this.state.payment,
+					"name"		 		: this.state.name,
+					"email"    		: this.state.email,
+					"password" 		: this.state.password,
+					"phone"		 	  : this.state.phone,
+					"paypal_link" : this.state.payment,
 				}
-	
+
+				this.setState({
+					userInfo: {
+						...this.state.userInfo,
+						name			: this.state.name,
+						email			: this.state.email,
+						password	: this.state.password,
+						phone			: this.state.phone,
+						payment		: this.state.payment,
+					}
+				})
+
 				fetch('http://celebritycatcher.com/api/v1/catcher/signup', {
 					method: 'post',
 					body:  JSON.stringify(data),
@@ -97,19 +119,21 @@ export default class CatcherSignup extends Component {
 				})
 				.then((response) =>  response.json())
 				.then((responseJson) => {
-					console.log('============', responseJson);
 					
 					if(responseJson.status === 200) {
 						Keyboard.dismiss();
-						
+
+						// Remember user info in app
+						AsyncStorage.setItem(this.state.userInfo.email, JSON.stringify(this.state.userInfo), () => {
+							
+						});
+
 						//Login after Signup success
-						var data = {
+						let data = {
 							"email"   : this.state.email,
 							"password": this.state.password,
 							"type"    : 1, 
 						}
-						
-						console.log('========', data);
 						
 						fetch('http://celebritycatcher.com/api/v1/login', {
 							 method: 'POST',
@@ -122,8 +146,17 @@ export default class CatcherSignup extends Component {
 						.then((responseJson) => {
 							if(responseJson.status === 200) {
 								Keyboard.dismiss();
+
+								AsyncStorage.getItem(this.state.userInfo.email, (err, result) => {
+									// this.setSate({userInfo: result});
+									// console.log("==login==", result);
+								});
 								
-								this.props.navigation.navigate('CatcherProfile', {id: "Catcher", token: responseJson.data.token });
+								this.props.navigation.navigate('CatcherProfile', {
+									id			 : "Catcher", 
+									token		 : responseJson.data.token,
+									userInfo : this.state.userInfo, 
+								});
 							}	else { 
 								alert("Login Failed");
 							}
@@ -133,13 +166,7 @@ export default class CatcherSignup extends Component {
 						});
 
 					} else {
-						// responseJson.errors.map((error) => {
-						// alert(error.email);
-						// console.log(error);
-						// });
-
 						alert("The email has already been token or Bad input parameter.")
-						
 					}
 				})
 				.catch((error) => {
