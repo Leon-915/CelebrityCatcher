@@ -8,26 +8,26 @@ import Expo from 'expo';
 const androidGoogleId = "912559162689-l8d5730ihm82c4pdiitresp4tl4qlhfu.apps.googleusercontent.com";
 const androidFacebookId = "249650282317588";
 
-async function signInWithGoogleAsync() {
-	try {
-		const result = await Expo.Google.logInAsync({
-			androidClientId: androidId,
-			scopes: ['profile', 'email'],
-		});
+// async function signInWithGoogleAsync() {
+// 	try {
+// 		const result = await Expo.Google.logInAsync({
+// 			androidClientId: androidGoogleId,
+// 			scopes: ['profile', 'email'],
+// 		});
 
-		console.log('==========', result);
+// 		console.log('==========', result);
 		
 
-		if (result.type === 'success') {
-			// this.props.navigation.navigate('PhotoCategories');
-			console.log('==========', result.accessToken);
-		} else {
-			return {cancelled: true};
-		}
-	} catch(e) {
-		return {error: true};
-	}
-}
+// 		if (result.type === 'success') {
+// 			// this.props.navigation.navigate('PhotoCategories');
+// 			console.log('==========', result.accessToken);
+// 		} else {
+// 			return {cancelled: true};
+// 		}
+// 	} catch(e) {
+// 		return {error: true};
+// 	}
+// }
 
 // async function FacebooklogIn() {
 //   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('249650282317588', {
@@ -42,42 +42,6 @@ async function signInWithGoogleAsync() {
 // 			console.log("========", {token}.token);
 //   }
 // }
-
-
-class LoginSuccessView extends Component {
-  render() {
-    return (
-      // <ImageBackground style={{width: Dimensions.get('window').width - 40, height: 20 }} imageStyle={{ borderRadius: 5 }}
-			// 		source={require('../../images/login-res-bg.png')}
-			// 		resizeMode='contain' >
-			// 		<View>
-			// 			<Image style={{}}
-			// 				source={require('../../images/login-res-bg.png')} />
-			// 			<Text style={{}}>{this.props.res}</Text>
-			// 		</View>
-			// </ImageBackground>
-			<Text style={{marginBottom: -5, color: '#34d4a6'}}>{this.props.res}</Text>
-    );
-  }
-}
-
-class LoginErrorView extends Component {
-  render() {
-    return (
-      // <ImageBackground style={{width: Dimensions.get('window').width - 40, height: 20 }} imageStyle={{ borderRadius: 5 }}
-			// 		source={require('../../images/login-res-bg.png')}
-			// 		resizeMode='contain' >
-			// 		<View>
-			// 			<Image style={{}}
-			// 				source={require('../../images/login-res-bg.png')} />
-			// 			<Text style={{}}>{this.props.res}</Text>
-			// 		</View>
-			// </ImageBackground>
-			<Text style={{marginBottom: 10, color: 'red'}}>{this.props.res}</Text>
-    );
-  }
-}
-
 
 
 export default class CatcherLogin extends Component {
@@ -174,16 +138,40 @@ export default class CatcherLogin extends Component {
 	async signInWithGoogleAsync() {
 		try {
 			const result = await Expo.Google.logInAsync({
-				androidClientId: androidId,
+				androidClientId: androidGoogleId,
 				scopes: ['profile', 'email'],
 			});
 	
-			console.log('==========', result);
-			
 	
 			if (result.type === 'success') {
-				// this.props.navigation.navigate('PhotoCategories');
-				console.log('==========', result.accessToken);
+				let userInfo = Object.assign({}, this.state.userInfo);    			//creating copy of object
+				userInfo.name = result.user.name;                       				//updating value
+				this.setState({userInfo});
+
+				
+				if(this.props.navigation.state.params.id === "Catcher" ) {
+					this.props.navigation.navigate('CatcherProfile', { 	
+							id			 : 'Catcher', 
+							token		 : result.accessToken,
+							userInfo : this.state.userInfo, 
+					});
+				}
+
+				if(this.props.navigation.state.params.id === "Subscriber" ) {
+					this.props.navigation.navigate('SubscriberProfile', { 
+						id			 : 'Subscriber', 
+						token		 : result.accessToken,
+						userInfo : this.state.userInfo, 
+					});
+				}
+
+				if(this.props.navigation.state.params.id === "Celebrity" ) {
+					this.props.navigation.navigate('CelebrityProfile', { 
+						id: 'Celebrity', 
+						token		 : result.accessToken,
+						userInfo : this.state.userInfo, 
+					});
+				}
 			} else {
 				return {cancelled: true};
 			}
