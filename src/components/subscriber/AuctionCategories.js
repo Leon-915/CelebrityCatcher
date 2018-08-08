@@ -45,9 +45,9 @@ export default class AuctionCategories extends Component {
 	}
 	// ============================ 
   
-  _goToAuctionCategories(type, token) {
+  _goToAuctionCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('AuctionCategories', {id: type, token: token})
+		this.props.navigation.navigate('AuctionCategories', {id: type, token: token, userInfo: userInfo})
 	}
 
 	_goToCatcherAuction(type) {
@@ -70,9 +70,9 @@ export default class AuctionCategories extends Component {
 		this.props.navigation.navigate('CatcherDashboard', {id: type})
 	}
 
-	_goToSubscriberProfile(type) {
+	_goToSubscriberProfile(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('SubscriberProfile', {id: type})
+		this.props.navigation.navigate('SubscriberProfile', {id: type, token: token, userInfo: userInfo})
 	}
 
 	_goToCatcherLatestUpdate(type) {
@@ -115,6 +115,8 @@ export default class AuctionCategories extends Component {
 	}
 
 	render() {
+
+		const { params } =this.props.navigation.state
 
 		return(
 			<View style={styles.container}  >
@@ -246,7 +248,7 @@ export default class AuctionCategories extends Component {
 										</View>
 
 										<View style={{alignItems: 'center'}}>
-											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>John Carter</Text>
+											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>{params.userInfo.name}</Text>
 										</View>
 
 										<View style={{flexDirection: 'row'}}>
@@ -262,7 +264,7 @@ export default class AuctionCategories extends Component {
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/home-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToAuctionCategories(params.id, params.token)}>
+											<TouchableOpacity onPress={() => this._goToAuctionCategories(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Home</Text>
 											</TouchableOpacity>
 										</View>
@@ -308,7 +310,7 @@ export default class AuctionCategories extends Component {
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/profile-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToSubscriberProfile(params.id)}>
+											<TouchableOpacity onPress={() => this._goToSubscriberProfile(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Profile</Text>
 											</TouchableOpacity>
 										</View>

@@ -36,9 +36,9 @@ export default class CatcherPhotos extends Component {
     }
 	}
 
-	_goToPhotoCategories(type, token) {
+	_goToPhotoCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('PhotoCategories', {id: type, token: token})
+		this.props.navigation.navigate('PhotoCategories', {id: type, token: token, userInfo: userInfo})
 	}
 
 	_goToCatcherAuction = (type) => {
@@ -61,15 +61,15 @@ export default class CatcherPhotos extends Component {
 		this.props.navigation.navigate('CatcherDashboard', {id: type})
 	}
 
-	_goToCatcherProfile = (type) => {
+	_goToCatcherProfile = (type, token, userInfo) => {
 		this.setState({ visibleModal: false });
 		
 		if(type === "Celebrity") {
-			this.props.navigation.navigate('CelebrityProfile', {id: type})
+			this.props.navigation.navigate('CelebrityProfile', {id: type, token: token, userInfo: userInfo})
 		}
 
 		if(type === "Catcher") {
-			this.props.navigation.navigate('CatcherProfile', {id: type})
+			this.props.navigation.navigate('CatcherProfile', {id: type, token: token, userInfo: userInfo})
 		}
 	}
 
@@ -315,7 +315,7 @@ export default class CatcherPhotos extends Component {
 										</View>
 
 										<View style={{alignItems: 'center'}}>
-											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>John Carter</Text>
+											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>{params.userInfo.name}</Text>
 										</View>
 
 										<View style={{flexDirection: 'row'}}>
@@ -327,11 +327,11 @@ export default class CatcherPhotos extends Component {
 									</View>
 
 									<View style={styles.modalUnderTop}>
-									<View style={styles.homeItemView}>
+										<View style={styles.homeItemView}>
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/home-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToPhotoCategories(params.id, params.token)}>
+											<TouchableOpacity onPress={() => this._goToPhotoCategories(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Home</Text>
 											</TouchableOpacity>
 										</View>
@@ -377,7 +377,7 @@ export default class CatcherPhotos extends Component {
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/profile-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToCatcherProfile(params.id)}>
+											<TouchableOpacity onPress={() => this._goToCatcherProfile(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Profile</Text>
 											</TouchableOpacity>
 										</View>

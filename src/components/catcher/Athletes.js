@@ -36,9 +36,6 @@ export default class Athletes extends Component {
 
 		const { params } =this.props.navigation.state;
 
-		if(params.id === "Subscriber") {
-			this.setState({ subscriber: true });
-		}
 		
 		return(
 			<View style={styles.container}>

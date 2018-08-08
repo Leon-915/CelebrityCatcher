@@ -110,6 +110,7 @@ export default class CatcherSignup extends Component {
 					}
 				})
 
+
 				fetch('http://celebritycatcher.com/api/v1/catcher/signup', {
 					method: 'post',
 					body:  JSON.stringify(data),
@@ -122,7 +123,7 @@ export default class CatcherSignup extends Component {
 					
 					if(responseJson.status === 200) {
 						Keyboard.dismiss();
-
+						
 						// Remember user info in app
 						AsyncStorage.setItem(this.state.userInfo.email, JSON.stringify(this.state.userInfo), () => {
 							
@@ -149,7 +150,7 @@ export default class CatcherSignup extends Component {
 
 								AsyncStorage.getItem(this.state.userInfo.email, (err, result) => {
 									// this.setSate({userInfo: result});
-									// console.log("==login==", result);
+									console.log("==login==", result);
 								});
 								
 								this.props.navigation.navigate('CatcherProfile', {
@@ -180,6 +181,17 @@ export default class CatcherSignup extends Component {
 					"phone": this.state.phone,
 					"payment_info": this.state.payment,
 				}
+
+				this.setState({
+					userInfo: {
+						...this.state.userInfo,
+						name			: this.state.name,
+						email			: this.state.email,
+						password	: this.state.password,
+						phone			: this.state.phone,
+						payment		: this.state.payment,
+					}
+				})
 	
 				fetch('http://celebritycatcher.com/api/v1/subscriber/signup', {
 					method: 'post',
@@ -194,6 +206,11 @@ export default class CatcherSignup extends Component {
 					if(responseJson.status === 200) {
 						
 						Keyboard.dismiss();
+
+						// Remember user info in app
+						AsyncStorage.setItem(this.state.userInfo.email, JSON.stringify(this.state.userInfo), () => {
+							
+						});
 						
 						//Login after Signup success
 						var data = {
@@ -216,7 +233,12 @@ export default class CatcherSignup extends Component {
 							if(responseJson.status === 200) {
 								Keyboard.dismiss();
 								
-								this.props.navigation.navigate('SubscriberProfile', {id: "Subscriber", token: responseJson.data.token });
+								this.props.navigation.navigate('SubscriberProfile', {
+									id			 : "Subscriber", 
+									token		 : responseJson.data.token,
+									userInfo : this.state.userInfo, 
+								
+								});
 							}	else { 
 								alert("Login Failed");
 							}
@@ -240,6 +262,17 @@ export default class CatcherSignup extends Component {
 					"phone": this.state.phone,
 					"payment_info": this.state.payment,
 				}
+
+				this.setState({
+					userInfo: {
+						...this.state.userInfo,
+						name			: this.state.name,
+						email			: this.state.email,
+						password	: this.state.password,
+						phone			: this.state.phone,
+						payment		: this.state.payment,
+					}
+				})
 	
 				fetch('http://celebritycatcher.com/api/v1/celebrity/signup', {
 					method: 'post',
@@ -250,11 +283,15 @@ export default class CatcherSignup extends Component {
 				})
 				.then((response) =>  response.json())
 				.then((responseJson) => {
-					console.log('============', responseJson);
 					
 					if(responseJson.status === 200) {
 						
 						Keyboard.dismiss();
+
+						// Remember user info in app
+						AsyncStorage.setItem(this.state.userInfo.email, JSON.stringify(this.state.userInfo), () => {
+							
+						});
 						
 						//Login after Signup success
 						var data = {
@@ -277,7 +314,12 @@ export default class CatcherSignup extends Component {
 							if(responseJson.status === 200) {
 								Keyboard.dismiss();
 								
-								this.props.navigation.navigate('CelebrityProfile', {id: "Celebrity", token: responseJson.data.token });
+								this.props.navigation.navigate('CelebrityProfile', {
+									id: "Celebrity", 
+									token: responseJson.data.token,
+									userInfo : this.state.userInfo, 
+								 });
+
 							}	else { 
 								alert("Login Failed");
 							}

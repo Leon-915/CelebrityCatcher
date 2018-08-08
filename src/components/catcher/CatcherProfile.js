@@ -236,7 +236,12 @@ export default class CatcherProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={() => this.props.navigation.navigate('Photos', {id: params.id, token: params.token})}
+							onPress={() => this.props.navigation.navigate('Photos', {
+								id			 : params.id, 
+								token		 : params.token,
+								userInfo : params.userInfo,
+								
+							})}
 							onHideUnderlay={this._onHideUnderlayPhotos.bind(this)}
 							onShowUnderlay={this._onShowUnderlayPhotos.bind(this)} >
 
@@ -249,7 +254,11 @@ export default class CatcherProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={() => this.props.navigation.navigate('ActiveBidPhotos', {id: params.id, token: params.token})}
+							onPress={() => this.props.navigation.navigate('ActiveBidPhotos', {
+								id			 : params.id, 
+								token		 : params.token,
+								userInfo : params.userInfo,
+							})}
 							onHideUnderlay={this._onHideUnderlayActiveBidPhotos.bind(this)}
 							onShowUnderlay={this._onShowUnderlayActiveBidPhotos.bind(this)} >
 
@@ -262,7 +271,12 @@ export default class CatcherProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={() => this.props.navigation.navigate('SoldPhotos', {id: params.id, token: params.token})}
+							onPress={() => this.props.navigation.navigate('SoldPhotos', {
+								id			 : params.id, 
+								token		 : params.token,
+								userInfo : params.userInfo,
+								
+							})}
 							onHideUnderlay={this._onHideUnderlaySoldPhotos.bind(this)}
 							onShowUnderlay={this._onShowUnderlaySoldPhotos.bind(this)} >
 

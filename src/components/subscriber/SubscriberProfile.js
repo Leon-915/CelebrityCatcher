@@ -127,7 +127,7 @@ export default class SubscriberProfile extends Component {
 						</View>
 						
 						<Text style={{color: 'white', fontSize: 16,fontWeight: 'bold', alignItems: 'flex-start',
-							marginTop: 3, marginBottom: 5, }}>John Carter</Text>
+							marginTop: 3, marginBottom: 5, }}>{ params.userInfo.name }</Text>
 
 						<Hide hide={ !this.state.subscriber }>
 							<View style={styles.buttonContent}>
@@ -241,7 +241,11 @@ export default class SubscriberProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={ () => this.props.navigation.navigate('PurchasedPhotos', {id: params.id, token: params.token}) }
+							onPress={ () => this.props.navigation.navigate('PurchasedPhotos', {
+								id			 : params.id, 
+								token		 : params.token,
+								userInfo : params.userInfo,
+							}) }
 							onHideUnderlay={this._onHideUnderlayActiveBidPhotos.bind(this)}
 							onShowUnderlay={this._onShowUnderlayActiveBidPhotos.bind(this)} >
 

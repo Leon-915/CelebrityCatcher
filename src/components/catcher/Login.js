@@ -15,6 +15,9 @@ async function signInWithGoogleAsync() {
 			scopes: ['profile', 'email'],
 		});
 
+		console.log('==========', result);
+		
+
 		if (result.type === 'success') {
 			// this.props.navigation.navigate('PhotoCategories');
 			console.log('==========', result.accessToken);
@@ -26,21 +29,19 @@ async function signInWithGoogleAsync() {
 	}
 }
 
-async function FacebooklogIn() {
-  const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('249650282317588', {
-		permissions: ['public_profile'],
-	});
+// async function FacebooklogIn() {
+//   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('249650282317588', {
+// 		permissions: ['public_profile'],
+// 	});
 	
-	if (type === 'success') {
-    // Get the user's name using Facebook's Graph API
-    const response = await fetch(
-      `https://graph.facebook.com/me?access_token=${token}`);
+// 	if (type === 'success') {
+//     // Get the user's name using Facebook's Graph API
+//     const response = await fetch(
+//       `https://graph.facebook.com/me?access_token=${token}`);
 		
-		// this.props.navig ation.navigate('PhotoCategories');		
-		// this.props.navigation.navigate('PhotoCategories', { name: (await response.json()).name, token: {token}.token });		
-			console.log("========", {token}.token);
-  }
-}
+// 			console.log("========", {token}.token);
+//   }
+// }
 
 
 class LoginSuccessView extends Component {
@@ -124,6 +125,73 @@ export default class CatcherLogin extends Component {
 		}
 	}
 
+	async FacebooklogIn() {
+		const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('249650282317588', {
+			permissions: ['public_profile'],
+		});
+		
+		if (type === 'success') {
+			// Get the user's name using Facebook's Graph API
+			const response = await fetch(
+				`https://graph.facebook.com/me?access_token=${token}`);
+				
+
+			let userInfo = Object.assign({}, this.state.userInfo);    //creating copy of object
+			userInfo.name = (await response.json()).name;                        //updating value
+			this.setState({userInfo});
+
+			console.log("========", this.props.navigation.state.params.id);
+			
+			
+			if(this.props.navigation.state.params.id === "Catcher" ) {
+				console.log('=====true====');
+				this.props.navigation.navigate('CatcherProfile', { 	
+						id			 : 'Catcher', 
+						token		 : {token}.token,
+						userInfo : this.state.userInfo, 
+				});
+			}
+
+			if(this.props.navigation.state.params.id === "Subscriber" ) {
+				this.props.navigation.navigate('SubscriberProfile', { 
+					id			 : 'Subscriber', 
+					token		 : {token}.token,
+					userInfo : this.state.userInfo, 
+				});
+			}
+
+			if(this.props.navigation.state.params.id === "Celebrity" ) {
+				this.props.navigation.navigate('CelebrityProfile', { 
+					id: 'Celebrity', 
+					token		 : {token}.token,
+					userInfo : this.state.userInfo, 
+				 });
+			}
+				
+		}
+	}
+
+	async signInWithGoogleAsync() {
+		try {
+			const result = await Expo.Google.logInAsync({
+				androidClientId: androidId,
+				scopes: ['profile', 'email'],
+			});
+	
+			console.log('==========', result);
+			
+	
+			if (result.type === 'success') {
+				// this.props.navigation.navigate('PhotoCategories');
+				console.log('==========', result.accessToken);
+			} else {
+				return {cancelled: true};
+			}
+		} catch(e) {
+			return {error: true};
+		}
+	}
+
 	onTypeText(text, type) {
 		if(type == "email") {
 			this.setState({ emailValid: true });
@@ -158,15 +226,16 @@ export default class CatcherLogin extends Component {
 			}
 			
 			AsyncStorage.getItem(this.state.email, (err, result) => {
-				console.log("===result==", JSON.parse(result))
+				if(result !== null) {
+					let userInfo = Object.assign({}, this.state.userInfo);    //creating copy of object
+					userInfo.name = JSON.parse(result).name;                        //updating value
+					userInfo.email = JSON.parse(result).email;                        //updating value
+					userInfo.password = JSON.parse(result).password;                        //updating value
+					userInfo.phone = JSON.parse(result).phone;                        //updating value
+					userInfo.payment = JSON.parse(result).payment;                        //updating value
+					this.setState({userInfo});
+				}
 				
-				let userInfo = Object.assign({}, this.state.userInfo);    //creating copy of object
-				userInfo.name = result.name;                        //updating value
-				userInfo.email = result.email;                        //updating value
-				userInfo.password = result.password;                        //updating value
-				userInfo.phone = result.phone;                        //updating value
-				userInfo.payment = result.payment;                        //updating value
-				this.setState({userInfo});
 			});
 
 			fetch('http://celebritycatcher.com/api/v1/login', {
@@ -178,12 +247,14 @@ export default class CatcherLogin extends Component {
 			})
 			.then((response) =>  response.json())
 			.then((responseJson) => {
+				console.log('=========', responseJson);
+				
 				if(responseJson.status === 200) {
 					Keyboard.dismiss();
 					
 					if(this.props.navigation.state.params.id === "Catcher" ) {
-						console.log("===login==", this.state.userInfo)
-						this.props.navigation.navigate('CatcherProfile', { 
+						console.log('=========', responseJson);
+						this.props.navigation.navigate('CatcherProfile', { 	
 								id			 : 'Catcher', 
 								token		 : responseJson.data.token,
 								userInfo : this.state.userInfo, 
@@ -191,11 +262,19 @@ export default class CatcherLogin extends Component {
 					}
 
 					if(this.props.navigation.state.params.id === "Subscriber" ) {
-						this.props.navigation.navigate('SubscriberProfile', { id: 'Subscriber', token: responseJson.data.token });
+						this.props.navigation.navigate('SubscriberProfile', { 
+							id			 : 'Subscriber', 
+							token		 : responseJson.data.token,
+							userInfo : this.state.userInfo, 
+						});
 					}
 
 					if(this.props.navigation.state.params.id === "Celebrity" ) {
-						this.props.navigation.navigate('CelebrityProfile', { id: 'Celebrity', token: responseJson.data.token });
+						this.props.navigation.navigate('CelebrityProfile', { 
+							id: 'Celebrity', 
+							token: responseJson.data.token,
+							userInfo : this.state.userInfo, 
+						 });
 					}
 				}	else { 
 					
@@ -312,14 +391,14 @@ export default class CatcherLogin extends Component {
 					</View>
 	
 					<View style={styles.socialLink}>
-						<TouchableOpacity style={styles.facebook} onPress={FacebooklogIn}>
+						<TouchableOpacity style={styles.facebook} onPress={() => this.FacebooklogIn()}>
 							<Image style={{width: 8, height: 14}}
 								source={require('../../images/facebook-icon.png')} 
 								resizeMode="contain" />
 							<Text style={{color: 'white', marginLeft: 5, fontSize: 10}}>Facebook</Text>
 						</TouchableOpacity>
 						
-						<TouchableOpacity style={styles.google} onPress={signInWithGoogleAsync}>
+						<TouchableOpacity style={styles.google} onPress={() => this.signInWithGoogleAsync()}>
 							<Image style={{width: 15, height: 12, marginTop: 3}}
 								source={require('../../images/google-icon.png')} 
 								resizeMode="contain" />

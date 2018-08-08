@@ -35,42 +35,42 @@ export default class PurchasedPhotos extends Component {
     }
 	}
 
-	_goToAuctionCategories(type, token) {
+	_goToAuctionCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('AuctionCategories', {id: type, token: token})
+		this.props.navigation.navigate('AuctionCategories', {id: type, token: token, userInfo: userInfo})
 	}
 
-	_goToCatcherAuction = (type) => {
+	_goToCatcherAuction(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('CatcherAuction', {id: type})
 	}
 
-	_goToCatcherEventList = (type) => {
+	_goToCatcherEventList(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('CatcherEventList', {id: type})
 	}
 
-	_goToCatcherFindEvent = (type) => {
+	_goToCatcherFindEvent(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('CatcherFindEvent', {id: type})
 	}
 
-	_goToCatcherDashboard = (type) => {
+	_goToCatcherDashboard(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('CatcherDashboard', {id: type})
 	}
 
-	_goToSubscriberProfile = (type) => {
+	_goToSubscriberProfile(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('SubscriberProfile', {id: type})
+		this.props.navigation.navigate('SubscriberProfile', {id: type, token: token, userInfo: userInfo})
 	}
 
-	_goToCatcherLatestUpdate = (type) => {
+	_goToCatcherLatestUpdate(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
 	}
 
-	_goToSetting = (type) => {
+	_goToSetting(type) {
 		this.setState({ visibleModal: false });
 		this.props.navigation.navigate('Settings', {id: type})
 	}
@@ -304,7 +304,7 @@ export default class PurchasedPhotos extends Component {
 										</View>
 
 										<View style={{alignItems: 'center'}}>
-											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>John Carter</Text>
+											<Text style={{color: 'white', fontSize: 14, alignItems: 'center'}}>{params.userInfo.name}</Text>
 										</View>
 
 										<View style={{flexDirection: 'row'}}>
@@ -320,7 +320,7 @@ export default class PurchasedPhotos extends Component {
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/home-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToAuctionCategories(params.id, params.token)}>
+											<TouchableOpacity onPress={() => this._goToAuctionCategories(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Home</Text>
 											</TouchableOpacity>
 										</View>
@@ -366,7 +366,7 @@ export default class PurchasedPhotos extends Component {
 											<Image style={{width: 14, marginRight: 10,}}
 													source={require('../../images/profile-icon.png')} 
 													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToSubscriberProfile(params.id)}>
+											<TouchableOpacity onPress={() => this._goToSubscriberProfile(params.id, params.token, params.userInfo)}>
 												<Text style={styles.modalItemText}>Profile</Text>
 											</TouchableOpacity>
 										</View>
