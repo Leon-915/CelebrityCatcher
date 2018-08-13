@@ -21,10 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ko915.celebritycatcher"
     },
     "android": {
-      "package": "com.catcher.photo"
+      "package": "com.ko915.celebritycatcher"
     }
   }
 }

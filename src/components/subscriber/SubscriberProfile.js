@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, StatusBar, TouchableOpacity,
 	BackHandler, TouchableHighlight } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Hide from '../Hide';
+import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-native-nav';
 
 
 export default class SubscriberProfile extends Component {
@@ -28,7 +29,8 @@ export default class SubscriberProfile extends Component {
 		// 				source={require('../../images/option-icon.png')} />
 		// 	</TouchableOpacity>
 		// ),
-	  headerTintColor: 'white',
+		headerTintColor: 'white',
+		header: null,
 	});
 
 	constructor(props) {
@@ -103,13 +105,62 @@ export default class SubscriberProfile extends Component {
   }
   _onShowUnderlaySoldPhotos(){
 		this.setState({ pressStatusSoldPhotos: true });
-	}	
+	}
+	
+	_goToLogout = () => {
+		fetch('http://celebritycatcher.com/api/v1/logout', {
+			 method: 'GET',
+			//  body:  JSON.stringify(data),
+			 headers: {
+				'Content-Type'  : 'application/json',
+				'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+			 },
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+
+				this.props.navigation.navigate('Login', {id: "Subscriber"});
+				
+			}	else {
+				alert(responseJson.message);				
+			}
+		})
+		.catch((error) => {
+			 console.error(error);
+		});
+
+	}
 	
 	render() {
 		const { params } =this.props.navigation.state
 		
 		return(
 			<View style={styles.container}>
+
+				<ImageBackground style={{}}
+								source={require('../../images/nav-bg-2.png')}	>
+					<NavBar style={{}}>
+						<NavGroup style={{}}>
+							<NavButton onPress={ this._goToLogout }>
+								<NavButtonText style={{color: '#7dddc2', marginLeft: -13}}>
+									<Image style={{ width: 40, height: 40, }}
+											source={require('../../images/left-arrow.png')}	/>
+								</NavButtonText>
+							</NavButton>
+						</NavGroup>
+
+						<View style={{alignItems: 'center'}}>
+							<NavTitle style={{marginLeft: -35}}>
+								{"Subscriber Profile"}
+							</NavTitle>
+						</View>
+
+						<NavTitle style={{}}>
+						</NavTitle>
+					</NavBar>
+				</ImageBackground>
 				
 				<View style={styles.container1}>
 					<View style={styles.name}>
@@ -129,7 +180,7 @@ export default class SubscriberProfile extends Component {
 						<Text style={{color: 'white', fontSize: 16,fontWeight: 'bold', alignItems: 'flex-start',
 							marginTop: 3, marginBottom: 5, }}>{ params.userInfo.name }</Text>
 
-						<Hide hide={ !this.state.subscriber }>
+						{/* <Hide hide={ !this.state.subscriber }>
 							<View style={styles.buttonContent}>
 								<Image style={styles.personPlus}
 									source={require('../../images/person-plus-icon.png')} />
@@ -143,7 +194,7 @@ export default class SubscriberProfile extends Component {
 									source={require('../../images/person-plus-icon.png')} />
 								<Text style={styles.followText}>Follow</Text>
 							</View>
-						</Hide>
+						</Hide> */}
 						
 					</View>
 
@@ -157,7 +208,7 @@ export default class SubscriberProfile extends Component {
 							<Text style={{color: 'white', fontSize: 10}}>Arizona United States</Text>
 						</View>
 
-						<Hide hide={ !this.state.subscriber }>
+						{/* <Hide hide={ !this.state.subscriber }>
 							<View style={styles.buttonContent}>
 								<Image style={styles.personPlus}
 									source={require('../../images/heart-2.png')} />
@@ -171,7 +222,7 @@ export default class SubscriberProfile extends Component {
 									source={require('../../images/heart-2.png')} />
 								<Text style={styles.followText}>Like</Text>
 							</View>
-						</Hide>
+						</Hide> */}
 						
 					</View>
 				</View>

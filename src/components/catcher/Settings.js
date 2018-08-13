@@ -41,14 +41,14 @@ export default class Settings extends Component {
 					<View style={styles.input}>
 						<TouchableOpacity style={styles.styleTouchable} >
 							<Text style={styles.textInput}>Name</Text>
-							<Text style={styles.textInput}>Jhone Carter</Text>
+							<TextInput style={styles.textInput1} placeholder="Jhone Carter" placeholderTextColor="#1d94b2"/>
 						</TouchableOpacity>
 					</View>
 
 					<View style={styles.input}>
 						<TouchableOpacity style={styles.styleTouchable} >
 							<Text style={styles.textInput}>Email</Text>
-							<Text style={styles.textInput}>john.cater@gmail.com</Text>
+							<TextInput style={styles.textInput1} placeholder="john.cater@gmail.com" placeholderTextColor="#1d94b2"/>
 						</TouchableOpacity>
 					</View>
 
@@ -56,19 +56,19 @@ export default class Settings extends Component {
 					
 						<TouchableOpacity style={styles.styleTouchable} >
 							<Text style={styles.textInput}>Mobile Number</Text>
-							<Text style={styles.textInput}>222 222 222</Text>
+							<TextInput style={styles.textInput1} placeholder="222 222 222" placeholderTextColor="#1d94b2"/>
 						</TouchableOpacity>
 					</View>
 
 					<View style={styles.input}>
 						<TouchableOpacity style={styles.styleTouchable} >
 							<Text style={styles.textInput}>Password</Text>
-							<Text style={styles.textInput}>........</Text>
+							<TextInput style={styles.textInput1} placeholder="........" secureTextEntry={true} placeholderTextColor="#1d94b2"/>
 						</TouchableOpacity>
 					</View>
 
 					<View style={styles.input}>
-						<TouchableOpacity style={styles.styleTouchable} >
+						<TouchableOpacity style={styles.styleTouchable} onPress={ () => this.props.navigation.navigate('Payment') }>
 							<Text style={styles.textInput}>Payment</Text>
 							<Text style={styles.textInput}>Add Money</Text>
 						</TouchableOpacity>
@@ -173,6 +173,13 @@ const styles = StyleSheet.create({
 	textInput: {
 		fontSize: 14,
 		color: '#1d94b2',
+	},
+
+	textInput1: {
+		fontSize: 14,
+		color: '#1d94b2',
+		width: Dimensions.get("window").width / 2 - 35,
+		textAlign: "right",
 	},
 
 	signin: {

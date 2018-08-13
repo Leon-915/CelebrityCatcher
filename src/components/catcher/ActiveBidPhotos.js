@@ -37,42 +37,73 @@ export default class ActiveBidPhotos extends Component {
 
 	_goToPhotoCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('PhotoCategories', {id: type, token: token, userInfo: userInfo})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('PhotoCategories', {id: type, token: token, userInfo: userInfo})
+		}, 300);
+		
 	}
 
 	_goToCatcherAuction = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherAuction', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherAuction', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherEventList = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherEventList', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherEventList', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherFindEvent = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherFindEvent', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherFindEvent', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherDashboard = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherDashboard', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherDashboard', {id: type})
+		}, 300);
+		
 	}
 
-	_goToCatcherProfile = (type, token, userInfo) => {
+	_goToCatcherProfile (type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherProfile', {id: type, token: token, userInfo: userInfo})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherProfile', {id: type, token: token, userInfo: userInfo});
+		}, 300);
 	}
 
 	_goToCatcherLatestUpdate = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+		}, 300);
+		
 	}
 
 	_goToSetting = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('Settings', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('Settings', {id: type})
+		}, 300);
+		
 	}
 
 
@@ -288,10 +319,9 @@ export default class ActiveBidPhotos extends Component {
 					isVisible={this.state.visibleModal === true}
 					animationIn={'slideInLeft'}
 					animationOut={'slideOutLeft'}
-					onRequestClose={ () => { this.setState({visibleModal: false})} }
 					style={{marginLeft: 0, marginTop: 0, marginBottom: 0}} >
 
-						<TouchableOpacity style={styles.modalbg} onPressOut={() => {this.setState({visibleModal: false})} }>
+						<TouchableOpacity style={styles.modalbg} onPress={() => {this.setState({visibleModal: false})} }>
 							<TouchableOpacity style={styles.modalContent} activeOpacity={1} >
 								<ImageBackground style={{height: Dimensions.get('window').height }} 
 									resizeMode='stretch'

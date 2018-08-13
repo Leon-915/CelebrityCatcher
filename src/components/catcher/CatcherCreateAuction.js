@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
 		padding: 30,
 		width: 100, 
 		justifyContent: 'center',
-
 		borderWidth: 1,
 		borderColor: '#b9e2f4',
 	},

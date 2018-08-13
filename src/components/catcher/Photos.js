@@ -6,6 +6,7 @@ import Swiper from 'react-native-swiper';
 import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } 
 	from 'react-native-nav';
 import Modal from 'react-native-modal';
+import Hide from '../Hide';
 
 
 export default class CatcherPhotos extends Component {
@@ -32,55 +33,106 @@ export default class CatcherPhotos extends Component {
     super(props)
     this.state = {
 				visibleModal: false,
-				
     }
+	}
+
+	componentDidMount() {
+		if(this.props.navigation.state.params.id === 'Catcher') {
+			this.setState({ catcher: true });
+		}
+		
+		if(this.props.navigation.state.params.id === 'Celebrity') {
+			this.setState({ celebrity: true });
+		}
 	}
 
 	_goToPhotoCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('PhotoCategories', {id: type, token: token, userInfo: userInfo})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('PhotoCategories', {id: type, token: token, userInfo: userInfo})
+		}, 300);
+		
 	}
 
 	_goToCatcherAuction = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherAuction', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherAuction', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherEventList = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherEventList', {id: type})
+
+		if(type === "Celebrity") {
+			setTimeout(() => {
+				this.props.navigation.navigate('CelebrityEvents', {id: type})
+			}, 300);
+			
+		}
+
+		if(type === "Catcher") {
+			setTimeout(() => {
+				this.props.navigation.navigate('CatcherEventList', {id: type})
+			}, 300);
+		}
+		
 	}
 
 	_goToCatcherFindEvent = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherFindEvent', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherFindEvent', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherDashboard = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherDashboard', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherDashboard', {id: type})
+		}, 300);
+		
 	}
 
-	_goToCatcherProfile = (type, token, userInfo) => {
+	_goToCatcherProfile (type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		
+
 		if(type === "Celebrity") {
-			this.props.navigation.navigate('CelebrityProfile', {id: type, token: token, userInfo: userInfo})
+			setTimeout(() => {
+				this.props.navigation.navigate('CelebrityProfile', {id: type, token: token, userInfo: userInfo})
+			}, 300);
+			
 		}
 
 		if(type === "Catcher") {
-			this.props.navigation.navigate('CatcherProfile', {id: type, token: token, userInfo: userInfo})
+			setTimeout(() => {
+				this.props.navigation.navigate('CatcherProfile', {id: type, token: token, userInfo: userInfo})
+			}, 300);
 		}
 	}
 
 	_goToCatcherLatestUpdate = (type) => {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+		}, 300);
+		
 	}
 
-	_goToSetting = (type) => {
+	_goToSetting(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('Settings', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('Settings', {id: type})
+		}, 300);
+		
 	}
 
 
@@ -355,14 +407,17 @@ export default class CatcherPhotos extends Component {
 											</TouchableOpacity>
 										</View>
 
-										<View style={styles.modalItemView}>
-											<Image style={{width: 14, marginRight: 10,}}
-													source={require('../../images/find-icon.png')} 
-													resizeMode="contain" />
-											<TouchableOpacity onPress={() => this._goToCatcherFindEvent(params.id)}>
-												<Text style={styles.modalItemText}>Find Events</Text>
-											</TouchableOpacity>
-										</View>
+										<Hide hide={ this.state.celebrity }>
+											<View style={styles.modalItemView}>
+												<Image style={{width: 14, marginRight: 10,}}
+														source={require('../../images/find-icon.png')} 
+														resizeMode="contain" />
+												<TouchableOpacity onPress={() => this._goToCatcherFindEvent(params.id)}>
+													<Text style={styles.modalItemText}>Find Events</Text>
+												</TouchableOpacity>
+											</View>
+										</Hide>
+										
 
 										<View style={styles.modalItemView}>
 											<Image style={{width: 14, marginRight: 10,}}

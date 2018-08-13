@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, StatusBar, TouchableOpacity,
 	BackHandler, TouchableHighlight } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Hide from '../Hide';
+import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-native-nav';
 
 
 export default class CatcherProfile extends Component {
@@ -28,7 +29,8 @@ export default class CatcherProfile extends Component {
 		// 				source={require('../../images/option-icon.png')} />
 		// 	</TouchableOpacity>
 		// ),
-	  headerTintColor: 'white',
+		headerTintColor: 'white',
+		header: null,
 	});
 
 	constructor(props) {
@@ -62,12 +64,6 @@ export default class CatcherProfile extends Component {
 			this.setState({ celebrity: true });
 		}
 
-		// === Disable Backbutton === 
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-	}
-
-	handleBackPress = () => {
-    return true;
 	}
 
 	_onHideUnderlayFollowers(){
@@ -111,6 +107,32 @@ export default class CatcherProfile extends Component {
   _onShowUnderlaySoldPhotos(){
 		this.setState({ pressStatusSoldPhotos: true });
 	}	
+
+	_goToLogout = () => {
+		fetch('http://celebritycatcher.com/api/v1/logout', {
+			 method: 'GET',
+			//  body:  JSON.stringify(data),
+			 headers: {
+				'Content-Type'  : 'application/json',
+				'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+			 },
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+
+				this.props.navigation.navigate('Login', {id: "Catcher"});
+				
+			}	else {
+				alert(responseJson.message);				
+			}
+		})
+		.catch((error) => {
+			 console.error(error);
+		});
+
+	}
 	
 	render() {
 
@@ -118,6 +140,29 @@ export default class CatcherProfile extends Component {
 		
 		return(
 			<View style={styles.container}>
+
+				<ImageBackground style={{}}
+								source={require('../../images/nav-bg-2.png')}	>
+					<NavBar style={{}}>
+						<NavGroup style={{}}>
+							<NavButton onPress={ this._goToLogout }>
+								<NavButtonText style={{color: '#7dddc2', marginLeft: -13}}>
+									<Image style={{width: 40, height: 40, }}
+											source={require('../../images/left-arrow.png')}	/>
+								</NavButtonText>
+							</NavButton>
+						</NavGroup>
+
+						<View style={{alignItems: 'center'}}>
+							<NavTitle style={{marginLeft: -35}}>
+								{"Catcher Profile"}
+							</NavTitle>
+						</View>
+
+						<NavTitle style={{}}>
+						</NavTitle>
+					</NavBar>
+				</ImageBackground>
 				
 				<View style={styles.container1}>
 					<View style={styles.name}>

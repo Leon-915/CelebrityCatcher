@@ -88,6 +88,18 @@ export default class CheckOut extends Component {
 							/>
 					</View>
 
+					<View style={{alignItems: 'center'}}>
+						<ImageBackground style={{marginTop: 15, width: Dimensions.get("window").width / 2 + 20, 
+							alignItems: 'center'}} 
+							imageStyle={{ borderRadius: 5 }}
+								source={require('../../images/button-bg.png')}>
+							<TouchableOpacity style={styles.button} 
+								onPress={ () => {this.setState({visibleModal: true})} } >
+								<Text style={styles.buttonText}>Place Bid</Text>
+							</TouchableOpacity>
+						</ImageBackground>
+					</View>
+
 					
 				</View>
 

@@ -52,7 +52,7 @@ import PurchasedPhotos from './src/components/subscriber/PurchasedPhotos';
 import PlaceBid from './src/components/subscriber/PlaceBid';
 import CheckOut from './src/components/subscriber/CheckOut';
 import SubscirberSoldPhoto from './src/components/subscriber/SubscirberSoldPhoto';
-import Payment from './src/components/subscriber/Payment';
+import Payment from './src/components/catcher/Payment';
 import AuctionCategories from './src/components/subscriber/AuctionCategories';
 import SubscriberAthletes from './src/components/subscriber/SubscriberAthletes';
 import SubscriberCelebrities from './src/components/subscriber/SubscriberCelebrities';
@@ -65,6 +65,9 @@ import SubscriberOthers from './src/components/subscriber/SubscriberOthers';
 //=== Celebrity ===
 import CelebrityFollowing from './src/components/celebrity/CelebrityFollowing';
 import CelebrityProfile from './src/components/celebrity/CelebrityProfile';
+import CelebrityEvents from './src/components/celebrity/CelebrityEvents';
+import CelebrityEvents2 from './src/components/celebrity/CelebrityEvents2';
+import CreateEvent from './src/components/celebrity/CreateEvent';
 
 
 
@@ -151,6 +154,9 @@ const Routes = createStackNavigator(
     //=== Celebrity Routes ===  
     CelebrityFollowing		  : { screen: CelebrityFollowing },
     CelebrityProfile	  	  : { screen: CelebrityProfile },
+    CelebrityEvents 	  	  : { screen: CelebrityEvents },
+    CelebrityEvents2	 	    : { screen: CelebrityEvents2 },
+    CreateEvent     	  	  : { screen: CreateEvent },
     
 
 

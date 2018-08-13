@@ -8,7 +8,7 @@ export default class All extends Component {
 	render() {
 		return(
 			
-			<Swiper style={styles.swiperStyle} 
+			<Swiper style={styles.swiperStyle} paginationStyle={{ bottom: 50 }}
 				dot={<View style={{backgroundColor:'rgba(87,211,185,1)', width: 8, height: 8,
 					borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
 				activeDot={<View style={{backgroundColor: 'rgba(87,211,185,1)', width: 8, height: 5, 

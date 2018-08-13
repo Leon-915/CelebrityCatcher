@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, Keyboard, ImageBackground, Dimensions, 
+	Image, TextInput, Keyboard, ImageBackground, Dimensions, 
 	KeyboardAvoidingView, AsyncStorage } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 import Expo from 'expo';
+import { CheckBox } from 'react-native-elements';
 const androidGoogleId = "912559162689-l8d5730ihm82c4pdiitresp4tl4qlhfu.apps.googleusercontent.com";
 const androidFacebookId = "249650282317588";
 
@@ -45,7 +46,21 @@ const androidFacebookId = "249650282317588";
 
 
 export default class CatcherLogin extends Component {
-	static navigationOptions = { header: null, };
+	static navigationOptions = ({ navigation, navigationOptions }) => ({
+	  title: 'Log In',
+	  headerTitleStyle: { 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	  },
+	  headerStyle: {
+	    height: 40,
+	  },
+	  headerBackground: (
+	    <Image resizeMode='stretch' style={{}}
+	      source={require('../../images/nav-bg-2.png')}
+	    />
+		),
+		headerTintColor: 'white',
+	});
 
 	constructor(props) {
     super(props);
@@ -68,6 +83,8 @@ export default class CatcherLogin extends Component {
 				payment	 : "",
 				phone		 : "",
 			},	
+
+			rememberMeStatus : false,
 		
 		};
 	}
@@ -76,16 +93,40 @@ export default class CatcherLogin extends Component {
 		if(this.props.navigation.state.params.id === 'Catcher') {
 			this.setState({ catcher: true });
 			this.setState({ type: 1 });
+
+			AsyncStorage.getItem("catcher_remember", (err, result) => {
+				if(result !== null) {
+					this.setState({ email		 : JSON.parse(result).email });
+					this.setState({ password : JSON.parse(result).password });
+					this.setState({ rememberMeStatus : true });
+				}
+			});
 		}
 		
 		if(this.props.navigation.state.params.id === 'Subscriber') {
 			this.setState({ subscriber: true });
 			this.setState({ type: 3 });
+
+			AsyncStorage.getItem("subscriber_remember", (err, result) => {
+				if(result !== null) {
+					this.setState({ email		 : JSON.parse(result).email });
+					this.setState({ password : JSON.parse(result).password });
+					this.setState({ rememberMeStatus : true });
+				}
+			});
 		}
 
 		if(this.props.navigation.state.params.id === 'Celebrity') {
 			this.setState({ celebrity: true });
 			this.setState({ type: 2 });
+
+			AsyncStorage.getItem("celebrity_remember", (err, result) => {
+				if(result !== null) {
+					this.setState({ email		 : JSON.parse(result).email });
+					this.setState({ password : JSON.parse(result).password });
+					this.setState({ rememberMeStatus : true });
+				}
+			});
 		}
 	}
 
@@ -104,11 +145,9 @@ export default class CatcherLogin extends Component {
 			userInfo.name = (await response.json()).name;                        //updating value
 			this.setState({userInfo});
 
-			console.log("========", this.props.navigation.state.params.id);
 			
 			
 			if(this.props.navigation.state.params.id === "Catcher" ) {
-				console.log('=====true====');
 				this.props.navigation.navigate('CatcherProfile', { 	
 						id			 : 'Catcher', 
 						token		 : {token}.token,
@@ -141,8 +180,7 @@ export default class CatcherLogin extends Component {
 				androidClientId: androidGoogleId,
 				scopes: ['profile', 'email'],
 			});
-	
-	
+
 			if (result.type === 'success') {
 				let userInfo = Object.assign({}, this.state.userInfo);    			//creating copy of object
 				userInfo.name = result.user.name;                       				//updating value
@@ -205,7 +243,6 @@ export default class CatcherLogin extends Component {
 			this.setState({ passwordValid: false })
 		}
 
-
 		if(this.state.email && this.state.password && this.state.emailValid && this.state.passwordValid) {
 			var data = {
 				"email"   : this.state.email,
@@ -235,13 +272,23 @@ export default class CatcherLogin extends Component {
 			})
 			.then((response) =>  response.json())
 			.then((responseJson) => {
-				console.log('=========', responseJson);
 				
 				if(responseJson.status === 200) {
 					Keyboard.dismiss();
+
+					if(!this.state.rememberMeStatus) {
+						this.setState({ email		 : "" });
+						this.setState({ password : "" });
+					}
+					
 					
 					if(this.props.navigation.state.params.id === "Catcher" ) {
-						console.log('=========', responseJson);
+						if(this.state.rememberMeStatus) {
+							AsyncStorage.setItem("catcher_remember", JSON.stringify(this.state.userInfo), () => {
+							
+							});
+						}
+
 						this.props.navigation.navigate('CatcherProfile', { 	
 								id			 : 'Catcher', 
 								token		 : responseJson.data.token,
@@ -250,6 +297,12 @@ export default class CatcherLogin extends Component {
 					}
 
 					if(this.props.navigation.state.params.id === "Subscriber" ) {
+						if(this.state.rememberMeStatus) {
+							AsyncStorage.setItem("subscriber_remember", JSON.stringify(this.state.userInfo), () => {
+							
+							});
+						}
+
 						this.props.navigation.navigate('SubscriberProfile', { 
 							id			 : 'Subscriber', 
 							token		 : responseJson.data.token,
@@ -258,6 +311,12 @@ export default class CatcherLogin extends Component {
 					}
 
 					if(this.props.navigation.state.params.id === "Celebrity" ) {
+						if(this.state.rememberMeStatus) {
+							AsyncStorage.setItem("celebrity_remember", JSON.stringify(this.state.userInfo), () => {
+							
+							});
+						}
+
 						this.props.navigation.navigate('CelebrityProfile', { 
 							id: 'Celebrity', 
 							token: responseJson.data.token,
@@ -284,6 +343,7 @@ export default class CatcherLogin extends Component {
 				
 		return(
 			<View behavior='padding' style={styles.container}>
+				
 				<View style={styles.container1}>
 	
 					{/* ==== Logo Images according to condition === */}
@@ -319,7 +379,7 @@ export default class CatcherLogin extends Component {
 							<TextInput onChangeText={(text) => this.onTypeText(text, 'email')}
 								style={this.state.emailValid ? styles.textInput : styles.invalidTextInput } 
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-								placeholder="Email" />
+								placeholder="Email" value={this.state.email} />
 						
 							<Hide style={{alignItems: 'flex-end'}} hide={this.state.emailValid}>
 								<Image style={styles.invalidIcon}
@@ -339,7 +399,7 @@ export default class CatcherLogin extends Component {
 							<TextInput onChangeText={(text) => this.onTypeText(text, 'password')}
 								style={this.state.passwordValid ? styles.textInput : styles.invalidTextInput } 
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-								placeholder="Password" 
+								placeholder="Password" value={this.state.password}
 								secureTextEntry={true} />
 						
 							<Hide style={{alignItems: 'flex-end'}} hide={this.state.passwordValid}>
@@ -362,8 +422,15 @@ export default class CatcherLogin extends Component {
 	
 					<View style={styles.remember}>
 						<View style={{alignItems: 'flex-start', flexDirection: 'row'}}>
-							<CheckBox style={styles.checkBox} />
-							<Text style={{fontSize: 10, color: '#727272'}}>Remember Me</Text>
+							<CheckBox containerStyle={styles.checkBox1} 
+								textStyle={{fontSize: 10, fontSize: 10, color: '#727272', fontWeight: '100'}}
+								center
+								title='Remember Me'
+								size={14}
+								checked={ this.state.rememberMeStatus }
+								onPress={() => this.setState({ rememberMeStatus: !this.state.rememberMeStatus })}
+							/>
+
 						</View>
 	
 						<TouchableOpacity style={{alignItems: 'flex-end'}} onPress={() => this.props.navigation.navigate('PassReset--')}>
@@ -440,7 +507,7 @@ const styles = StyleSheet.create({
 	logo: {
 		width: 90,
 		height: 90,
-		marginTop: 65, 
+		marginTop: 25, 
 		borderRadius: 70,
 	},
 
@@ -574,6 +641,17 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderColor: 'red',
 		
+	},
+
+	checkBox1: {
+		borderWidth: 0,
+		borderColor: '#ccf1fa',
+		paddingTop: 0,
+		paddingBottom: 0,
+		justifyContent: 'flex-start',
+		paddingLeft: 0,
+		marginLeft: -10,
+		marginTop: -2,
 	},
 	
 });

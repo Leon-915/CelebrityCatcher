@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, TextInput, CheckBox, Keyboard, KeyboardAvoidingView, 
-	ImageBackground, Dimensions, AsyncStorage } from 'react-native';
+	ImageBackground, Dimensions, AsyncStorage, ScrollView } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 
 
 export default class CatcherSignup extends Component {
 
-	static navigationOptions = { header: null, };
+	static navigationOptions = ({ navigation, navigationOptions }) => ({
+	  title: 'Signup',
+	  headerTitleStyle: { 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	  },
+	  headerStyle: {
+	    height: 40,
+	  },
+	  headerBackground: (
+	    <Image resizeMode='stretch' style={{}}
+	      source={require('../../images/nav-bg-2.png')}
+	    />
+		),
+		headerTintColor: 'white',
+	});
 
 	constructor(props) {
     super(props);
@@ -408,192 +422,196 @@ export default class CatcherSignup extends Component {
 		return(
 			<View style={styles.container}>
 
-				<KeyboardAvoidingView behavior='padding' style={styles.container1}>
-						<View style={styles.title}>
-							<Text style={{color: '#1d829e', fontSize: 24, marginRight: 10}}>{ params.id }</Text>
-							<Text style={{color: '#34d4a6', fontSize: 24}}>Sign Up</Text>
-						</View>
-		
-						<View style={styles.input}>
-							<Image style={{width: 16}}
-									source={require('../../images/person.png')} 
-									resizeMode="contain" />
+				<KeyboardAvoidingView
+					behavior='padding'  enabled style={styles.container1}>
+					<View style={styles.title}>
+						<Text style={{color: '#1d829e', fontSize: 22, fontWeight: 'bold',  marginRight: 10}}>{ params.id }</Text>
+						<Text style={{color: '#34d4a6', fontSize: 24}}>Sign Up</Text>
+					</View>
+	
+					<View style={styles.input}>
+						<Image style={{width: 16}}
+								source={require('../../images/person.png')} 
+								resizeMode="contain" />
 
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'username')} 
-									style={this.state.nameValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="User Name"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.nameValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Name</Text>
-								</Hide>
-							</View>
-						</View>
-		
-						<View style={styles.input}>
-							<Image style={{width: 16}}
-									source={require('../../images/email-icon.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'email')} 
-									style={this.state.emailValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Email"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.emailValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Email</Text>
-								</Hide>
-							</View>
-						</View>
-		
-						<View style={styles.input}>
-							<Image style={{width: 15}}
-									source={require('../../images/mobile-icon.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'phone')} 
-									style={this.state.phoneValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Phone Number"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.phoneValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Number</Text>
-								</Hide>
-							</View>
-						</View>
-		
-						<View style={styles.input}>
-							<Image style={{width: 16}}
-									source={require('../../images/key.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'password')} 
-									style={this.state.passwordValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Password"
-									secureTextEntry={true}  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.passwordValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Password(More 6 characters)</Text>
-								</Hide>
-							</View>
-						</View>
-		
-						<View style={styles.input}>
-							<Image style={{width: 16}}
-									source={require('../../images/confirm-icon.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'confirmPass')} 
-									style={this.state.confirmPassValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Confirm Password" 
-									secureTextEntry={true} />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.confirmPassValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Password</Text>
-								</Hide>
-							</View>
-						</View>
-
-						{/* === Payment Field According To Condition === */}
-						<Hide style={styles.input} hide={!this.state.catcher}>
-							<Image style={{width: 16}}
-									source={require('../../images/paypal-icon.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'payment')}
-									style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Paypal Link"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Account Number</Text>
-								</Hide>
-							</View>
-						</Hide>
-
-						<Hide style={styles.input} hide={!this.state.subscriber}>
-							<Image style={{width: 16}}
-									source={require('../../images/credit-card-icon.png')} 
-									resizeMode="contain" />
-
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'payment')}
-									style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Account Info For Payment"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Account Number</Text>
-								</Hide>
-							</View>
-						</Hide>
-
-						<Hide style={styles.input} hide={!this.state.celebrity}>
-							<Image style={{width: 16}}
-									source={require('../../images/payment-account-icon.png')} 
-									resizeMode="contain" />
-							
-							<View>
-								<TextInput onChangeText={(text) => this.validate(text, 'payment')}
-									style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
-									placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-									placeholder="Payment Information"  />
-							
-								<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
-									<Image style={styles.invalidIcon}
-											source={require('../../images/invalid-icon.png')} 
-											resizeMode="contain" />
-
-									<Text style={styles.invalidText}>Invalid Account Number</Text>
-								</Hide>
-							</View>
-						</Hide>
-						{/* ========================= */}
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'username')} 
+								style={this.state.nameValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="User Name"  />
 						
-						<ImageBackground style={{marginTop: 15}} imageStyle={{ borderRadius: 5 }}
-							source={require('../../images/button-bg.png')}>
-							<TouchableOpacity onPress={this._submit} style={styles.signin} >
-								<Text style={styles.signinText}>SIGN UP</Text>
-							</TouchableOpacity>
-						</ImageBackground>
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.nameValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Name</Text>
+							</Hide>
+						</View>
+					</View>
+	
+					<View style={styles.input}>
+						<Image style={{width: 16}}
+								source={require('../../images/email-icon.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'email')} 
+								style={this.state.emailValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Email"  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.emailValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Email</Text>
+							</Hide>
+						</View>
+					</View>
+	
+					<View style={styles.input}>
+						<Image style={{width: 15}}
+								source={require('../../images/mobile-icon.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'phone')} 
+								style={this.state.phoneValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Phone Number"  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.phoneValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Number</Text>
+							</Hide>
+						</View>
+					</View>
+	
+					<View style={styles.input}>
+						<Image style={{width: 16}}
+								source={require('../../images/key.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'password')} 
+								style={this.state.passwordValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Password"
+								secureTextEntry={true}  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.passwordValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Password(More 6 characters)</Text>
+							</Hide>
+						</View>
+					</View>
+	
+					<View style={styles.input}>
+						<Image style={{width: 16}}
+								source={require('../../images/confirm-icon.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'confirmPass')} 
+								style={this.state.confirmPassValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Confirm Password" 
+								secureTextEntry={true} />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.confirmPassValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Password</Text>
+							</Hide>
+						</View>
+					</View>
+
+					{/* === Payment Field According To Condition === */}
+					<Hide style={styles.input} hide={!this.state.catcher}>
+						<Image style={{width: 16}}
+								source={require('../../images/paypal-icon.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'payment')}
+								style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Paypal Link"  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Account Number</Text>
+							</Hide>
+						</View>
+					</Hide>
+
+					<Hide style={styles.input} hide={!this.state.subscriber}>
+						<Image style={{width: 16}}
+								source={require('../../images/credit-card-icon.png')} 
+								resizeMode="contain" />
+
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'payment')}
+								style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Account Info For Payment"  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Account Number</Text>
+							</Hide>
+						</View>
+					</Hide>
+
+					<Hide style={styles.input} hide={!this.state.celebrity}>
+						<Image style={{width: 16}}
+								source={require('../../images/payment-account-icon.png')} 
+								resizeMode="contain" />
+						
+						<View>
+							<TextInput onChangeText={(text) => this.validate(text, 'payment')}
+								style={this.state.paymentValid ? styles.textInput : styles.invalidTextInput } 
+								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
+								placeholder="Payment Information"  />
+						
+							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+								<Image style={styles.invalidIcon}
+										source={require('../../images/invalid-icon.png')} 
+										resizeMode="contain" />
+
+								<Text style={styles.invalidText}>Invalid Account Number</Text>
+							</Hide>
+						</View>
+					</Hide>
+
 					
-					</KeyboardAvoidingView>
+					{/* ========================= */}
+					
+					<ImageBackground style={{marginTop: 15}} imageStyle={{ borderRadius: 5 }}
+						source={require('../../images/button-bg.png')}>
+						<TouchableOpacity onPress={this._submit} style={styles.signin} >
+							<Text style={styles.signinText}>SIGN UP</Text>
+						</TouchableOpacity>
+					</ImageBackground>
+				
+				</KeyboardAvoidingView>
+				
 				
 			 	<BottomImage3 />
 			</View>	
@@ -612,22 +630,18 @@ const styles = StyleSheet.create({
 	},
 	
 	container1 : {
-    flex: 4,
+    // flex: 1,
 		alignItems: 'stretch',
 		marginRight: 35,
 		marginLeft: 35,
-		marginTop: 45,
-	},
-
-	container3 : {
-    flex: 1,
+		marginBottom: 110,
+		
 	},
 
 	title: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexDirection: 'row',
-		marginTop: 30,
 		marginBottom: 25,
 	},
 
@@ -640,7 +654,7 @@ const styles = StyleSheet.create({
 	textInput: {
 		width: Dimensions.get('window').width - 50,
 		marginLeft: 10,
-		marginBottom: 20,
+		marginBottom: 15,
 		paddingBottom: 10,
 		paddingLeft: 40,
 		marginLeft: -30,
@@ -686,11 +700,11 @@ const styles = StyleSheet.create({
 
 	signinText: {
 		textAlign: 'center',
-		fontSize: 20,
+		fontSize: 16,
 		paddingBottom: 10,
 		paddingTop: 10,
 		color: 'white',
-  
+		fontWeight: 'bold',
 	},
 
 	remember: {
@@ -699,29 +713,6 @@ const styles = StyleSheet.create({
 	},
 
 	
-	checkBox: {
-		marginTop: -7,
-	},
-
-	or: {
-		marginBottom: 15,
-		marginTop: 15,
-		position: 'relative',
-		alignItems: 'center',
-
-	},
-
-	textOr: {
-		backgroundColor: '#aae9fa',
-		color: 'white',
-		borderRadius: 30,
-		padding: 7,
-		justifyContent: 'center',
-		width: 35,
-		height: 35,
-		marginTop: -20,
-	},
-
 	socialLink: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',

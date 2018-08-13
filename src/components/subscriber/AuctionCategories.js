@@ -47,42 +47,74 @@ export default class AuctionCategories extends Component {
   
   _goToAuctionCategories(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('AuctionCategories', {id: type, token: token, userInfo: userInfo})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('AuctionCategories', {id: type, token: token, userInfo: userInfo})
+		}, 300);
+		
 	}
 
 	_goToCatcherAuction(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherAuction', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherAuction', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherEventList(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherEventList', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherEventList', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherFindEvent(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherFindEvent', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherFindEvent', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherDashboard(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherDashboard', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherDashboard', {id: type})
+		}, 300);
+		
 	}
 
 	_goToSubscriberProfile(type, token, userInfo) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('SubscriberProfile', {id: type, token: token, userInfo: userInfo})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('SubscriberProfile', {id: type, token: token, userInfo: userInfo})
+		}, 300);
+		
 	}
 
 	_goToCatcherLatestUpdate(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('CatcherLatestUpdate', {id: type})
+		}, 300);
+		
 	}
 
 	_goToSetting(type) {
 		this.setState({ visibleModal: false });
-		this.props.navigation.navigate('Settings', {id: type})
+
+		setTimeout(() => {
+			this.props.navigation.navigate('Settings', {id: type})
+		}, 300);
+		
 	}
 
 	_goToCatcherLogout = () => {
