@@ -140,7 +140,7 @@ export default class FavoriteCatcher extends Component {
 										<View style={{marginTop: -5,}}>
 											<Text style={styles.itemLeftText}>{ item.name }</Text>
 											<View style={{flexDirection: 'row',}}>
-												<Image style={{width: 10, height: 10, marginRight: 5, marginTop: 3,}}
+												<Image style={{width: 10, height: 10, marginRight: 5}}
 													source={require('../../images/photography.png')} />
 												<Text style={{fontSize: 10, color: '#4ba9c5',}}>{ item.type }</Text>
 											</View>	
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
 	},
 
 	photo: {
-		borderRadius: 30,
+		borderRadius: 15,
 		marginRight: 15,
 		width: 30,
 		height: 30,

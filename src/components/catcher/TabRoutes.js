@@ -13,7 +13,7 @@ import FavoriteSubscriber from './FavoriteSubscriber';
 export default class TabRoutes extends React.Component {
   render() {
     return (
-      <ScrollableTabView locked={true} style={{flex: 1}}
+      <ScrollableTabView locked={true} style={{flex: 1, borderWidth: 0}}
         initialPage={0} tabBarUnderlineStyle={{width: 0, }}
         tabBarActiveTextColor='#7dddc2'
         tabBarInactiveTextColor='rgb(188, 188, 188)'

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, NavigationBar, ImageBackground, Dimensions, Keyboard } from 'react-native';
+	Image, TextInput, NavigationBar, ImageBackground, Dimensions, Keyboard, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Swiper from 'react-native-swiper';
 import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } 
@@ -175,12 +175,10 @@ export default class CatcherSoldPhotos extends Component {
 				<ImageBackground style={{}}
 								source={require('../../images/nav-bg-1.png')}	>
 					<NavBar style={{}}>
-						<NavGroup style={{}}>
+						<NavGroup style={ Platform.OS !=="ios" ? {marginLeft: -20} : {}}>
 							<NavButton onPress={() => this.setState({ visibleModal: true })}>
-								<NavButtonText style={{color: '#7dddc2'}}>
-									<Image style={styles.optionImage}
-											source={require('../../images/option-icon.png')}	/>
-								</NavButtonText>
+								<Image style={styles.optionImage}
+										source={require('../../images/option-icon.png')}	/>
 							</NavButton>
 						</NavGroup>
 
@@ -891,7 +889,7 @@ const styles = StyleSheet.create({
 
 	photo: {
 		borderWidth: 5,
-		borderRadius: 50,
+		borderRadius: 37.5,
 		borderColor: '#2293b5',
 		width: 75,
 		height: 75,
@@ -916,8 +914,9 @@ const styles = StyleSheet.create({
 	},
 
 	optionImage: {
-		width: 40,
-		height: 40,
+		width: 20,
+		height: 20,
+		marginLeft: 10,
 	},
 
 	homeItemView: {

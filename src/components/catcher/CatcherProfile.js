@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, TextInput, CheckBox, Keyboard, Dimensions, ImageBackground, 
-	BackHandler, TouchableHighlight } from 'react-native';
+	BackHandler, TouchableHighlight, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Hide from '../Hide';
 import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-native-nav';
@@ -10,27 +10,7 @@ import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-nati
 export default class CatcherProfile extends Component {
 
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
-	  title: 'Catcher Profile',
-	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
-	  },
-	  headerStyle: {
-	    height: 40,
-	  },
-	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
-	    />
-		),
-		// headerLeft: (
-    //   <TouchableOpacity style={{marginLeft: 30}} 
-		// 		onPress={ this.menuPress }>
-		// 		<Image style={{width: 16, height: 16}}
-		// 				source={require('../../images/option-icon.png')} />
-		// 	</TouchableOpacity>
-		// ),
-		headerTintColor: 'white',
-		header: null,
+	  header: null,
 	});
 
 	constructor(props) {
@@ -45,24 +25,58 @@ export default class CatcherProfile extends Component {
 			pressStatusActiveBidPhotos		: false,
 			pressStatusSoldPhotos					: false,
 
-			catcher    : false,
-			subscriber : false,
-			celebrity  : false,
+			userInfo : {
+				userId 							 : "",
+				name  	 						 : "",
+				email 	 						 : "",
+				avatar_link 				 : "",
+				catcher_following		 : 0,
+				followers						 : 0,
+				following						 : 0,
+				likes								 : 0,
+				payment_info				 : "",
+				phone								 : "",
+				provider						 : "",
+				provider_id					 : null,
+				rate								 : 0,
+				remember_token			 : null,
+				sold_photos					 : 0,
+				subscriber_following : 0,
+				total_photos				 : 0,
+				total_revenue    		 : "",
+				type								 : 0,
+			},
+
 		}
 	}
 
 	componentDidMount() {
-		if(this.props.navigation.state.params.id === 'Catcher') {
-			this.setState({ catcher: true });
-		}
-		
-		if(this.props.navigation.state.params.id === 'Subscriber') {
-			this.setState({ subscriber: true });
-		}
-
-		if(this.props.navigation.state.params.id === 'Celebrity') {
-			this.setState({ celebrity: true });
-		}
+		fetch('http://celebritycatcher.com/api/v1/profile/0', {
+			 method: 'GET',
+			//  body:  JSON.stringify(data),
+			 headers: {
+				'Content-Type'  : 'application/json',
+				'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+			 },
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+				
+				let userInfo   = Object.assign({}, this.state.userInfo);          //creating copy of object
+				userInfo.name  = responseJson.data.name;                        //updating value
+				userInfo.email = responseJson.data.email;                        //updating value
+				userInfo.id    = responseJson.data.id;                        //updating value
+				this.setState({userInfo});
+				
+			}	else {
+				alert(responseJson.message);				
+			}
+		})
+		.catch((error) => {
+			 console.error(error);
+		});		
 
 	}
 
@@ -144,12 +158,10 @@ export default class CatcherProfile extends Component {
 				<ImageBackground style={{}}
 								source={require('../../images/nav-bg-2.png')}	>
 					<NavBar style={{}}>
-						<NavGroup style={{}}>
+						<NavGroup style={ Platform.OS !=="ios" ? {marginLeft: -20} : {}}>
 							<NavButton onPress={ this._goToLogout }>
-								<NavButtonText style={{color: '#7dddc2', marginLeft: -13}}>
-									<Image style={{width: 40, height: 40, }}
-											source={require('../../images/left-arrow.png')}	/>
-								</NavButtonText>
+								<Image style={{width: 20, height: 15, marginLeft: 10 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
 							</NavButton>
 						</NavGroup>
 
@@ -180,7 +192,7 @@ export default class CatcherProfile extends Component {
 						</View>
 						
 						<Text style={{color: 'white', fontSize: 16,fontWeight: 'bold', alignItems: 'flex-start',
-							marginTop: 3, marginBottom: 5, }}>{ params.userInfo.name }</Text>
+							marginTop: 3, marginBottom: 5, }}>{ this.state.userInfo.name }</Text>
 
 						<Hide hide={ !this.state.subscriber }>
 							<View style={styles.buttonContent}>
@@ -203,7 +215,7 @@ export default class CatcherProfile extends Component {
 					<View style={styles.location}>
 						<View style={{height: 20}}></View>
 
-						<View style={{flexDirection: 'row', marginTop: 3, marginBottom: 5,}}>
+						<View style={{flexDirection: 'row', marginBottom: 5,}}>
 							<Image style={{width: 10, height: 10, marginRight: 5, marginTop: 2}}
 									source={require('../../images/location-icon.png')} 
 									resizeMode="contain" />
@@ -242,7 +254,10 @@ export default class CatcherProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={() => this.props.navigation.navigate('Followers')}
+							onPress={() => this.props.navigation.navigate('Followers', { 
+								userId			 : this.state.userInfo.userId, 
+								token		 : params.token,
+							 })}
 							onHideUnderlay={this._onHideUnderlayFollowers.bind(this)}
 							onShowUnderlay={this._onShowUnderlayFollowers.bind(this)} >
 
@@ -377,7 +392,7 @@ const styles = StyleSheet.create({
 
 	photo: {
 		borderWidth: 3,
-		borderRadius: 50,
+		borderRadius: 37.5,
 		borderColor: '#2293b5',
 		width: 75,
 		height: 75,
@@ -391,7 +406,7 @@ const styles = StyleSheet.create({
 	},
 
 	location: {
-		marginRight: -20,
+		marginRight: -35,
 		justifyContent: 'flex-end',
 		alignItems: 'flex-end',
 	},

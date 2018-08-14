@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, TextInput, CheckBox, Keyboard, Dimensions, ImageBackground, 
-	BackHandler, TouchableHighlight } from 'react-native';
+	BackHandler, TouchableHighlight, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Hide from '../Hide';
 import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-native-nav';
@@ -10,27 +10,7 @@ import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } from 'react-nati
 export default class SubscriberProfile extends Component {
 
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
-	  title: 'Subscriber Profile',
-	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
-	  },
-	  headerStyle: {
-	    height: 40,
-	  },
-	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
-	    />
-		),
-		// headerLeft: (
-    //   <TouchableOpacity style={{marginLeft: 30}} 
-		// 		onPress={ this.menuPress }>
-		// 		<Image style={{width: 16, height: 16}}
-		// 				source={require('../../images/option-icon.png')} />
-		// 	</TouchableOpacity>
-		// ),
-		headerTintColor: 'white',
-		header: null,
+	 	header: null,
 	});
 
 	constructor(props) {
@@ -142,12 +122,11 @@ export default class SubscriberProfile extends Component {
 				<ImageBackground style={{}}
 								source={require('../../images/nav-bg-2.png')}	>
 					<NavBar style={{}}>
-						<NavGroup style={{}}>
+						<NavGroup style={ Platform.OS !=="ios" ? {marginLeft: -20} : {}}>
 							<NavButton onPress={ this._goToLogout }>
-								<NavButtonText style={{color: '#7dddc2', marginLeft: -13}}>
-									<Image style={{ width: 40, height: 40, }}
-											source={require('../../images/left-arrow.png')}	/>
-								</NavButtonText>
+								<Image style={{ width: 20, height: 15, marginLeft: 10 }}
+										source={require('../../images/left-arrow.png')}
+										resizeMode="stretch"	/>
 							</NavButton>
 						</NavGroup>
 
@@ -201,7 +180,7 @@ export default class SubscriberProfile extends Component {
 					<View style={styles.location}>
 						<View style={{height: 20}}></View>
 
-						<View style={{flexDirection: 'row', marginTop: 3, marginBottom: 5,}}>
+						<View style={{flexDirection: 'row', marginBottom: 5,}}>
 							<Image style={{width: 10, height: 10, marginRight: 5, marginTop: 2}}
 									source={require('../../images/location-icon.png')} 
 									resizeMode="contain" />
@@ -353,7 +332,7 @@ const styles = StyleSheet.create({
 
 	photo: {
 		borderWidth: 3,
-		borderRadius: 50,
+		borderRadius: 37.5,
 		borderColor: '#2293b5',
 		width: 75,
 		height: 75,
@@ -367,7 +346,7 @@ const styles = StyleSheet.create({
 	},
 
 	location: {
-		marginRight: -20,
+		marginRight: -35,
 		justifyContent: 'flex-end',
 		alignItems: 'flex-end',
 	},

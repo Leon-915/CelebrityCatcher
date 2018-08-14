@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, ImageBackground, Dimensions } from 'react-native';
+	Image, TextInput, ImageBackground, Dimensions, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Modal from 'react-native-modal';
 import { CheckBox } from 'react-native-elements';
@@ -13,16 +13,21 @@ export default class Payment extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Payment',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
 
@@ -45,7 +50,7 @@ export default class Payment extends Component {
 					
 
 					<View style={styles.item2}>
-							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#ccf1fa', fontSize: 10}}
+							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#b9e2f4', fontSize: 10}}
 								center
 								title='Credit Card/Debit Card'
 								checkedIcon='dot-circle-o'
@@ -104,7 +109,7 @@ export default class Payment extends Component {
 					</Hide>
 
 					<View style={styles.item2}>
-							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#ccf1fa', fontSize: 10}}
+							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#b9e2f4', fontSize: 10}}
 								center
 								title='Paypal'
 								checkedIcon='dot-circle-o'
@@ -129,7 +134,7 @@ export default class Payment extends Component {
 					</Hide>
 
 					<View style={styles.item2}>
-							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#ccf1fa', fontSize: 10}}
+							<CheckBox containerStyle={styles.checkBox} textStyle={{color: '#b9e2f4', fontSize: 10}}
 								center
 								title='Bank Account(Via chaque)'
 								checkedIcon='dot-circle-o'
@@ -205,7 +210,7 @@ const styles = StyleSheet.create({
 		alignItems: 'stretch',
 		marginBottom: 15,
 		borderWidth: 1,	
-		borderColor: '#ccf1fa',
+		borderColor: '#b9e2f4',
 		justifyContent: 'space-between',
 		paddingLeft: 20,
 		paddingRight: 20,
@@ -219,7 +224,7 @@ const styles = StyleSheet.create({
 		alignItems: 'stretch',
 		marginTop: 15,
 		borderWidth: 1,	
-		borderColor: '#ccf1fa',
+		borderColor: '#b9e2f4',
 		paddingRight: 20,
 		flexDirection: 'row',
 	},
@@ -329,7 +334,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 3,
 		paddingLeft: 10,
 		justifyContent: 'flex-start',
-		
+		backgroundColor: 'white',
 	},
 
 	checkBox1: {
@@ -339,7 +344,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 3,
 		justifyContent: 'flex-start',
 		paddingLeft: 0,
-		marginLeft: -10
+		marginLeft: -10,
+		backgroundColor: 'white',
 	},
 
 	input: {
@@ -354,7 +360,9 @@ const styles = StyleSheet.create({
 	textInput: {
 		width: 200,
 		marginLeft: 10,
-		fontSize: 10
+		fontSize: 10,
+		paddingTop: 5,
+		paddingBottom: 5,
 	},
 
 	hideView: {

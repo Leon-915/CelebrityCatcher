@@ -9,14 +9,12 @@ import Loading from './src/components/Loading';
 //=== Catcher ====
 import Login from './src/components/catcher/Login';
 import Signup from './src/components/catcher/Signup';
-import LeftSideMenu from './src/components/catcher/LeftSideMenu';
 import Followers from './src/components/catcher/Followers';
 import Following from './src/components/catcher/Following';
 import SoldPhotos from './src/components/catcher/SoldPhotos';
 import Photos from './src/components/catcher/Photos';
 
 import PassReset from './src/components/catcher/PassReset';
-import CatcherSignup from './src/components/catcher/CatcherSignup';
 import CatcherProfile from './src/components/catcher/CatcherProfile';
 import CatcherAuction from './src/components/catcher/CatcherAuction';
 import CatcherAuction2 from './src/components/catcher/CatcherAuction2';
@@ -93,7 +91,6 @@ const Routes = createStackNavigator(
     Signup							 : { screen: Signup },
     PassReset		         : { screen: PassReset },
     
-    LeftSideMenu				 : { screen: LeftSideMenu },
     
     Followers		         : { screen: Followers },
     Following		         : { screen: Following },
@@ -111,7 +108,6 @@ const Routes = createStackNavigator(
     
     //=== Catcher Routes ===
     
-    CatcherSignup				 : { screen: CatcherSignup },
     PhotoCategories			 : { screen: PhotoCategories },
     CatcherAuction			 : { screen: CatcherAuction },
     CatcherAuction2			 : { screen: CatcherAuction2 },

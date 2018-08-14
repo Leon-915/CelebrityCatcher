@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, ImageBackground } from 'react-native';
+	Image, TextInput, CheckBox, ImageBackground, Platform } from 'react-native';
 
 import BottomImage2 from '../BottomImage2';
 import Swiper from 'react-native-swiper';
@@ -12,16 +12,21 @@ export default class SubscriberFollowing extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Subscriber Following',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal'
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
 
@@ -674,7 +679,7 @@ const styles = StyleSheet.create({
 	},
 
 	photo: {
-		borderRadius: 30,
+		borderRadius: 15,
 		marginRight: 15,
 		width: 30,
 		height: 30,

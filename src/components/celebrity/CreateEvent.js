@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, ImageBackground } from 'react-native';
+	Image, TextInput, CheckBox, ImageBackground, Platform, Dimensions } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 
 
@@ -9,16 +9,21 @@ export default class CreateEvent extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Create Event',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
 
@@ -92,8 +97,9 @@ const styles = StyleSheet.create({
 	},
 
 	bg: {
-		height: 170,
-		width: 430,
+		height: 250,
+		width: Dimensions.get('window').width,
+		marginTop: -50,
 	},
 
 	header: {
@@ -109,8 +115,8 @@ const styles = StyleSheet.create({
 
 	findEventView: {
 		alignItems: 'stretch',
-		marginTop: -100,
-		width: 350,
+		marginTop: -105,
+		width: Dimensions.get('window').width - 60,
 		borderColor: '#afafaf',
 		borderWidth: 1,
 		shadowColor: '#cccccc',
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
 	content: {
 		paddingLeft: 15,
 		paddingRight: 15,
-		paddingTop: 20,
+		paddingTop: 10,
 		paddingBottom: 20,
 	},
 
@@ -130,9 +136,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		borderWidth: 1,
 		borderColor: '#b9e2f4',
-		paddingTop: 2,
+		paddingTop: 5,
 		paddingRight: 10,
-		paddingBottom: 2,
+		paddingBottom: 5,
 		marginTop: 15,
 		justifyContent: 'space-between',
 	},
@@ -160,8 +166,7 @@ const styles = StyleSheet.create({
 
 	upload: {
 		alignItems: 'center', 
-		padding: 30,
-		width: 100, 
+		padding: 20,
 		justifyContent: 'center',
 		borderWidth: 1,
 		borderColor: '#b9e2f4',

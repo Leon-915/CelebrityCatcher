@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, ImageBackground, Dimensions } from 'react-native';
+	Image, TextInput, ImageBackground, Dimensions, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Modal from 'react-native-modal';
 import { CheckBox } from 'react-native-elements'
@@ -12,16 +12,21 @@ export default class CheckOut extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Checkout',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
 
@@ -304,6 +309,7 @@ const styles = StyleSheet.create({
 		paddingTop: 3,
 		paddingBottom: 3,
 		paddingLeft: 10,
+		backgroundColor: 'white',
 	},
 
 	

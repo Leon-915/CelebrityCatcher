@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, Keyboard, Dimensions, ImageBackground, BackHandler } from 'react-native';
+	Image, TextInput, CheckBox, Keyboard, Dimensions, ImageBackground, 
+	BackHandler, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 
 
@@ -9,14 +10,19 @@ export default class Settings extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Settings',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
 		),
 		headerTintColor: 'white',
@@ -180,6 +186,7 @@ const styles = StyleSheet.create({
 		color: '#1d94b2',
 		width: Dimensions.get("window").width / 2 - 35,
 		textAlign: "right",
+		marginTop: -3
 	},
 
 	signin: {

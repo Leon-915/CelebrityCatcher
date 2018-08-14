@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, ImageBackground, TextInput, NavigationBar, Dimensions, ScrollView, TouchableWithoutFeedback, 
-	BackHandler } from 'react-native';
+	BackHandler, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import Modal from 'react-native-modal';
-import CatcherLogin from './CatcherLogin';
 import Home from '../home/Home';
 import NavBar, { NavGroup, NavButton, NavButtonText, NavTitle } 
 	from 'react-native-nav';
@@ -177,12 +176,10 @@ export default class PhotoCategories extends Component {
 				<ImageBackground style={{}}
 								source={require('../../images/nav-bg-1.png')}	>
 					<NavBar style={{}}>
-						<NavGroup style={{}}>
+						<NavGroup style={ Platform.OS !=="ios" ? {marginLeft: -20} : {}}>
 							<NavButton onPress={() => this.setState({ visibleModal: true })}>
-								<NavButtonText style={{color: '#7dddc2'}}>
-									<Image style={styles.optionImage}
-											source={require('../../images/option-icon.png')}	/>
-								</NavButtonText>
+								<Image style={styles.optionImage}
+										source={require('../../images/option-icon.png')}	/>
 							</NavButton>
 						</NavGroup>
 
@@ -436,8 +433,9 @@ const styles = StyleSheet.create({
 	},
 
 	optionImage: {
-		width: 40,
-		height: 40,
+		width: 20,
+		height: 20,
+		marginLeft: 10,
 	},
 
 	personImageContent: {
@@ -453,7 +451,7 @@ const styles = StyleSheet.create({
 	itemCenterImage: {
 		width: 80,
 		height: 80,
-		borderRadius: 45,
+		borderRadius: 40,
 		borderWidth: 3,
 		borderColor: '#ffffff',
 		marginBottom: 15,
@@ -512,7 +510,7 @@ const styles = StyleSheet.create({
 
 	photo: {
 		borderWidth: 5,
-		borderRadius: 50,
+		borderRadius: 37.5,
 		borderColor: '#2293b5',
 		width: 75,
 		height: 75,

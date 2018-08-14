@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, ImageBackground } from 'react-native';
+	Image, TextInput, CheckBox, ImageBackground, Platform } from 'react-native';
 
 import BottomImage2 from '../BottomImage2';
 import Swiper from 'react-native-swiper';
@@ -11,18 +11,27 @@ export default class Followers extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Followers',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
+
+	indexChanged(index) {
+		alert(index);
+	}
 
 	render() {
 		return(
@@ -33,6 +42,7 @@ export default class Followers extends Component {
 						borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
 					activeDot={<View style={{backgroundColor: 'rgba(87,211,185,1)', width: 8, height: 5, 
 						borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
+					onIndexChanged={ index => this.indexChanged(index) }
 				>
 					
 					<View style={styles.container1}>
@@ -623,7 +633,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginTop: -22,
+		marginTop: -20,
 	},
 
 	followButton: {
@@ -679,7 +689,7 @@ const styles = StyleSheet.create({
 	},
 
 	photo: {
-		borderRadius: 30,
+		borderRadius: 15,
 		marginRight: 15,
 		width: 30,
 		height: 30,

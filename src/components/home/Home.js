@@ -41,21 +41,6 @@ export default class Home extends Component {
 		this.setState({ pressStatusCelebrity: true });
 	}
 
-	// === Disable Backbutton === 
-	// componentDidMount() {
-  //   BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-	// }
-
-	// componentWillUnmount() {
-  //   BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-  // }
-	
-	// handleBackPress = () => {
-  //   return true;
-	// }
-	// ============================ 
-
-	
 	render() {
 	
 		return(
@@ -234,6 +219,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 13,
 		left: Dimensions.get('window').width / 2 - 90,
+		zIndex: 1,
 	},
 
 	text: {
@@ -259,9 +245,10 @@ const styles = StyleSheet.create({
 
 	buttonPress: {
     backgroundColor: '#2ab5a2',
-		borderRadius: 10,
+		borderRadius: 5,
 		height: 50,
 		marginTop: -14,
+		width: Dimensions.get('window').width - 70,
 	},
 	
 	button: {

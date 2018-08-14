@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, TextInput, CheckBox, Keyboard, KeyboardAvoidingView, 
-	ImageBackground, Dimensions, AsyncStorage, ScrollView } from 'react-native';
+	ImageBackground, Dimensions, AsyncStorage, ScrollView, Platform } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 
@@ -11,13 +11,18 @@ export default class CatcherSignup extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Signup',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
-	  },
+		},
+		headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {} }
 	      source={require('../../images/nav-bg-2.png')}
 	    />
 		),
@@ -134,13 +139,16 @@ export default class CatcherSignup extends Component {
 				})
 				.then((response) =>  response.json())
 				.then((responseJson) => {
+
 					
 					if(responseJson.status === 200) {
 						Keyboard.dismiss();
 						
 						// Remember user info in app
+						
+
 						AsyncStorage.setItem(this.state.userInfo.email, JSON.stringify(this.state.userInfo), () => {
-							
+	
 						});
 
 						//Login after Signup success
@@ -164,7 +172,6 @@ export default class CatcherSignup extends Component {
 
 								AsyncStorage.getItem(this.state.userInfo.email, (err, result) => {
 									// this.setSate({userInfo: result});
-									console.log("==login==", result);
 								});
 								
 								this.props.navigation.navigate('CatcherProfile', {
@@ -429,8 +436,8 @@ export default class CatcherSignup extends Component {
 						<Text style={{color: '#34d4a6', fontSize: 24}}>Sign Up</Text>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 16}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input }>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/person.png')} 
 								resizeMode="contain" />
 
@@ -440,7 +447,7 @@ export default class CatcherSignup extends Component {
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
 								placeholder="User Name"  />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.nameValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.nameValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -450,8 +457,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 16}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input }>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/email-icon.png')} 
 								resizeMode="contain" />
 						
@@ -459,9 +466,10 @@ export default class CatcherSignup extends Component {
 							<TextInput onChangeText={(text) => this.validate(text, 'email')} 
 								style={this.state.emailValid ? styles.textInput : styles.invalidTextInput } 
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-								placeholder="Email"  />
+								placeholder="Email" 
+								keyboardType={'email-address'} />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.emailValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.emailValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -471,8 +479,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 15}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input }>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 15} }
 								source={require('../../images/mobile-icon.png')} 
 								resizeMode="contain" />
 						
@@ -480,9 +488,10 @@ export default class CatcherSignup extends Component {
 							<TextInput onChangeText={(text) => this.validate(text, 'phone')} 
 								style={this.state.phoneValid ? styles.textInput : styles.invalidTextInput } 
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-								placeholder="Phone Number"  />
+								placeholder="Phone Number" 
+								keyboardType={'number-pad'} />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.phoneValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.phoneValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -492,8 +501,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 16}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input }>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/key.png')} 
 								resizeMode="contain" />
 						
@@ -504,7 +513,7 @@ export default class CatcherSignup extends Component {
 								placeholder="Password"
 								secureTextEntry={true}  />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.passwordValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.passwordValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -514,8 +523,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 16}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input }>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/confirm-icon.png')} 
 								resizeMode="contain" />
 						
@@ -526,7 +535,7 @@ export default class CatcherSignup extends Component {
 								placeholder="Confirm Password" 
 								secureTextEntry={true} />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.confirmPassValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.confirmPassValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -537,8 +546,8 @@ export default class CatcherSignup extends Component {
 					</View>
 
 					{/* === Payment Field According To Condition === */}
-					<Hide style={styles.input} hide={!this.state.catcher}>
-						<Image style={{width: 16}}
+					<Hide style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input } hide={!this.state.catcher}>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/paypal-icon.png')} 
 								resizeMode="contain" />
 						
@@ -548,7 +557,7 @@ export default class CatcherSignup extends Component {
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
 								placeholder="Paypal Link"  />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.paymentValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -558,8 +567,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</Hide>
 
-					<Hide style={styles.input} hide={!this.state.subscriber}>
-						<Image style={{width: 16}}
+					<Hide style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input } hide={!this.state.subscriber}>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/credit-card-icon.png')} 
 								resizeMode="contain" />
 
@@ -569,7 +578,7 @@ export default class CatcherSignup extends Component {
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
 								placeholder="Account Info For Payment"  />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.paymentValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -579,8 +588,8 @@ export default class CatcherSignup extends Component {
 						</View>
 					</Hide>
 
-					<Hide style={styles.input} hide={!this.state.celebrity}>
-						<Image style={{width: 16}}
+					<Hide style={ Platform.OS === "ios" ? {flexDirection: 'row', marginBottom: 2} : styles.input } hide={!this.state.celebrity}>
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/payment-account-icon.png')} 
 								resizeMode="contain" />
 						
@@ -590,7 +599,7 @@ export default class CatcherSignup extends Component {
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
 								placeholder="Payment Information"  />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.paymentValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43,}} hide={this.state.paymentValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -634,7 +643,7 @@ const styles = StyleSheet.create({
 		alignItems: 'stretch',
 		marginRight: 35,
 		marginLeft: 35,
-		marginBottom: 110,
+		marginBottom: 155,
 		
 	},
 
@@ -648,7 +657,8 @@ const styles = StyleSheet.create({
 	input: {
 		flexDirection: 'row',
 		borderColor: '#b9e2f4',
-		marginTop: 0,
+		marginTop: -10,
+		// marginBottom: -10,
 	},
 
 	textInput: {
@@ -657,7 +667,7 @@ const styles = StyleSheet.create({
 		marginBottom: 15,
 		paddingBottom: 10,
 		paddingLeft: 40,
-		marginLeft: -30,
+		marginLeft: -20,
 		fontSize: 12,
 		borderBottomWidth: 1,
 		borderColor: '#b9e2f4',
@@ -669,7 +679,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		paddingBottom: 10,
 		paddingLeft: 40,
-		marginLeft: -30,
+		marginLeft: -20,
 		fontSize: 12,
 		borderBottomWidth: 1,
 		borderColor: 'red',
@@ -677,7 +687,6 @@ const styles = StyleSheet.create({
 	},
 
 	invalidIcon: {
-		marginTop: -45,
 		width: 14,
 		height: 14,
 	},

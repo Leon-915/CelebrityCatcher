@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, ImageBackground } from 'react-native';
+	Image, TextInput, CheckBox, ImageBackground, Platform } from 'react-native';
 
 import BottomImage from '../BottomImage';
 
@@ -10,21 +10,21 @@ export default class CatcherCreateAuction extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Create Auction',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal' 
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
-	  // headerLeft: (
-	  //   <TouchableOpacity onPress={ () => this.props.navigation.navigate('Celebrities') }>
-	  //       <Image style={{width: 13, height: 13, marginLeft: 25}} source={ require('../../images/option-icon.png') }/>
-	  //   </TouchableOpacity>
-		// ),
+		),
 		headerTintColor: 'white'
 	});
 
@@ -61,11 +61,14 @@ export default class CatcherCreateAuction extends Component {
 						</View>
 					</View>
 					
+					<ImageBackground style={{marginBottom: 20, marginTop: 15}} imageStyle={{ borderRadius: 5 }}
+							source={require('../../images/button-bg.png')}>
+						<TouchableOpacity style={styles.button} 
+							onPress={() => this.props.navigation.navigate('CatcherAuction2')}>
+							<Text style={styles.buttonText}>Save</Text>
+						</TouchableOpacity>
+					</ImageBackground>
 					
-					<TouchableOpacity style={styles.button} 
-						onPress={() => this.props.navigation.navigate('CatcherAuction2')}>
-						<Text style={styles.buttonText}>Save</Text>
-					</TouchableOpacity>
 				</View>
 
 				<BottomImage />
@@ -117,10 +120,7 @@ const styles = StyleSheet.create({
 
 	button: {
 		justifyContent: 'center',
-		marginTop: 15,
-		backgroundColor: '#29aca4',
 		borderRadius: 5,
-		marginBottom: 15,
 	},
 
 	buttonText: {

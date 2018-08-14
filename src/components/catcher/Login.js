@@ -1,62 +1,32 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
 	Image, TextInput, Keyboard, ImageBackground, Dimensions, 
-	KeyboardAvoidingView, AsyncStorage } from 'react-native';
+	KeyboardAvoidingView, AsyncStorage, Platform , } from 'react-native';
 import BottomImage3 from '../BottomImage3';
 import Hide from '../Hide';
 import Expo from 'expo';
 import { CheckBox } from 'react-native-elements';
 const androidGoogleId = "912559162689-l8d5730ihm82c4pdiitresp4tl4qlhfu.apps.googleusercontent.com";
+const iosGoogleId = "912559162689-lma90oubj391ls7aq56cm8mg1h2agh39.apps.googleusercontent.com"
 const androidFacebookId = "249650282317588";
-
-// async function signInWithGoogleAsync() {
-// 	try {
-// 		const result = await Expo.Google.logInAsync({
-// 			androidClientId: androidGoogleId,
-// 			scopes: ['profile', 'email'],
-// 		});
-
-// 		console.log('==========', result);
-		
-
-// 		if (result.type === 'success') {
-// 			// this.props.navigation.navigate('PhotoCategories');
-// 			console.log('==========', result.accessToken);
-// 		} else {
-// 			return {cancelled: true};
-// 		}
-// 	} catch(e) {
-// 		return {error: true};
-// 	}
-// }
-
-// async function FacebooklogIn() {
-//   const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('249650282317588', {
-// 		permissions: ['public_profile'],
-// 	});
-	
-// 	if (type === 'success') {
-//     // Get the user's name using Facebook's Graph API
-//     const response = await fetch(
-//       `https://graph.facebook.com/me?access_token=${token}`);
-		
-// 			console.log("========", {token}.token);
-//   }
-// }
-
 
 export default class CatcherLogin extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Log In',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', alignSelf: 'center', 
 	  },
 	  headerStyle: {
 	    height: 40,
-	  },
+		},
+		headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
 		),
 		headerTintColor: 'white',
@@ -82,7 +52,12 @@ export default class CatcherLogin extends Component {
 				password : "",
 				payment	 : "",
 				phone		 : "",
-			},	
+			},
+			
+			rememberUserInfo : {
+				email 	 : "",
+				password : "",
+			},
 
 			rememberMeStatus : false,
 		
@@ -178,6 +153,7 @@ export default class CatcherLogin extends Component {
 		try {
 			const result = await Expo.Google.logInAsync({
 				androidClientId: androidGoogleId,
+				iosClientId: iosGoogleId,
 				scopes: ['profile', 'email'],
 			});
 
@@ -260,8 +236,12 @@ export default class CatcherLogin extends Component {
 					userInfo.payment = JSON.parse(result).payment;                        //updating value
 					this.setState({userInfo});
 				}
-				
 			});
+
+			// let userInfo = Object.assign({}, this.state.userInfo);    //creating copy of object
+			// userInfo.email = this.state.email;                        //updating value
+			// userInfo.password = this.state.password;
+			// this.setState({userInfo});                                //updating value
 
 			fetch('http://celebritycatcher.com/api/v1/login', {
 				 method: 'POST',
@@ -283,9 +263,9 @@ export default class CatcherLogin extends Component {
 					
 					
 					if(this.props.navigation.state.params.id === "Catcher" ) {
+
 						if(this.state.rememberMeStatus) {
-							AsyncStorage.setItem("catcher_remember", JSON.stringify(this.state.userInfo), () => {
-							
+							AsyncStorage.setItem("catcher_remember", JSON.stringify(this.state.userInfo),  () => {
 							});
 						}
 
@@ -371,17 +351,21 @@ export default class CatcherLogin extends Component {
 						<Text style={{color: '#34d4a6', fontSize: 20}}>Sign in</Text>
 					</View>
 	
-					<View style={styles.input}>
-						<Image style={{width: 16}}
+					<View style={ Platform.OS === "ios" ? {flexDirection: 'row'} : styles.input}>
+						<View style={{}}>
+							<Image style={Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/person.png')} 
-								resizeMode="contain" />
+								resizeMode="contain" />	
+						</View>
+						
 						<View>
 							<TextInput onChangeText={(text) => this.onTypeText(text, 'email')}
-								style={this.state.emailValid ? styles.textInput : styles.invalidTextInput } 
+								style={this.state.emailValid ? styles.textInput : styles.invalidTextInput }
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
-								placeholder="Email" value={this.state.email} />
+								placeholder="Email" value={this.state.email}
+								keyboardType={'email-address'} />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.emailValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.emailValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -392,17 +376,18 @@ export default class CatcherLogin extends Component {
 					</View>
 	
 					<View style={styles.input}>
-						<Image style={{width: 16}}
+						<Image style={ Platform.OS === "ios" ? {width: 16, position: 'relative', bottom: 10} : {width: 16} }
 								source={require('../../images/key.png')} 
-								resizeMode="contain" />
+								resizeMode="contain" /> 
 						<View>
 							<TextInput onChangeText={(text) => this.onTypeText(text, 'password')}
 								style={this.state.passwordValid ? styles.textInput : styles.invalidTextInput } 
 								placeholderTextColor="#3a96bd" underlineColorAndroid='transparent' 
 								placeholder="Password" value={this.state.password}
-								secureTextEntry={true} />
+								secureTextEntry={true}
+								keyboardType="default" />
 						
-							<Hide style={{alignItems: 'flex-end'}} hide={this.state.passwordValid}>
+							<Hide style={{alignItems: 'flex-end', marginTop: -43}} hide={this.state.passwordValid}>
 								<Image style={styles.invalidIcon}
 										source={require('../../images/invalid-icon.png')} 
 										resizeMode="contain" />
@@ -433,16 +418,19 @@ export default class CatcherLogin extends Component {
 
 						</View>
 	
-						<TouchableOpacity style={{alignItems: 'flex-end'}} onPress={() => this.props.navigation.navigate('PassReset--')}>
+						<TouchableOpacity style={{alignItems: 'flex-end'}} onPress={() => this.props.navigation.navigate('PassReset')}>
 							<Text style={{alignContent: 'flex-end', fontSize: 12, color: '#727272'}}>Forget Password ?</Text>
 						</TouchableOpacity>
 					</View>
 	
 					<View style={styles.or}>
-						<Image style={{width: 340}}
+						<Image style={{ width: Dimensions.get('window').width - 50, }}
 								source={require('../../images/bar.png')} 
 									/>
-						<Text style={styles.textOr}>OR</Text>
+						<View style={styles.textOr}>
+							<Text style={{color: 'white', fontSize: 12, textAlign: 'center',}}>OR</Text>
+						</View>			
+						
 					</View>
 	
 					<View style={styles.socialLink}>
@@ -454,7 +442,7 @@ export default class CatcherLogin extends Component {
 						</TouchableOpacity>
 						
 						<TouchableOpacity style={styles.google} onPress={() => this.signInWithGoogleAsync()}>
-							<Image style={{width: 15, height: 12, marginTop: 3}}
+							<Image style={{width: 15, height: 12, marginTop: 1.5}}
 								source={require('../../images/google-icon.png')} 
 								resizeMode="contain" />
 							<Text style={{color: 'white', marginLeft: 5, fontSize: 10}}>Google Plus</Text>
@@ -505,23 +493,23 @@ const styles = StyleSheet.create({
 	},
 
 	logo: {
-		width: 90,
-		height: 90,
-		marginTop: 25, 
-		borderRadius: 70,
+		width: 80,
+		height: 80,
+		marginTop: 20, 
+		borderRadius: 40,
 	},
 
 	title: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexDirection: 'row',
-		marginTop: 30,
+		marginTop: 25,
 		marginBottom: 20,
 	},
 
 	input: {
 		flexDirection: 'row',
-		
+		marginBottom: -10,
 	},
 
 	
@@ -559,15 +547,13 @@ const styles = StyleSheet.create({
 
 	textOr: {
 		backgroundColor: '#aae9fa',
-		color: 'white',
-		borderRadius: 30,
-		paddingTop: 4,
+		borderRadius: 12.5,
 		justifyContent: 'center',
-		textAlign: 'center',
 		width: 25,
 		height: 25,
 		marginTop: -15,
-		fontSize: 12,
+		
+
 	},
 
 	socialLink: {
@@ -607,7 +593,6 @@ const styles = StyleSheet.create({
 	},
 
 	invalidIcon: {
-		marginTop: -45,
 		width: 14,
 		height: 14,
 	},
@@ -619,6 +604,18 @@ const styles = StyleSheet.create({
 	},
 
 	textInput: {
+		width: Dimensions.get('window').width - 50,
+		marginLeft: 10,
+		marginBottom: 20,
+		paddingBottom: 10,
+		paddingLeft: 25,
+		marginLeft: -15,
+		fontSize: 12,
+		borderBottomWidth: 1,
+		borderColor: '#b9e2f4',
+	},
+
+	textInputIos: {
 		width: Dimensions.get('window').width - 50,
 		marginLeft: 10,
 		marginBottom: 20,
@@ -652,6 +649,7 @@ const styles = StyleSheet.create({
 		paddingLeft: 0,
 		marginLeft: -10,
 		marginTop: -2,
+		backgroundColor: 'white',
 	},
 	
 });

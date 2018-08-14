@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, ImageBackground, TextInput, NavigationBar, Dimensions } from 'react-native';
+	Image, ImageBackground, TextInput, NavigationBar, Dimensions, Platform } from 'react-native';
 import BottomImage2 from '../BottomImage2';
 import { LineChart, BarChart, PieChart, ProgressChart, ContributionGraph } 
 	from 'react-native-chart-kit';
@@ -11,16 +11,21 @@ export default class CatcherDashboard extends Component {
 	static navigationOptions = ({ navigation, navigationOptions }) => ({
 	  title: 'Dashboard',
 	  headerTitleStyle: { 
-	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal', marginLeft: -35 
+	    textAlign: 'center', flex: 1, color: 'white', fontSize: 16, fontWeight: 'normal'
 	  },
 	  headerStyle: {
 	    height: 40,
 	  },
+	  headerLeft: <TouchableOpacity onPress={ () => {navigation.goBack()} } >
+									<Image style={{width: 20, height: 15, marginLeft: 20 }} resizeMode="stretch"
+										source={require('../../images/left-arrow.png')}	/>
+								</TouchableOpacity>,
+		headerRight: <View />,						
 	  headerBackground: (
-	    <Image resizeMode='stretch' style={{}}
-	      source={require('../../images/nav-bg-2.png')}
+	    <Image resizeMode='stretch' style={ Platform.OS === "ios" ? {height: 60} : {}}
+				source={require('../../images/nav-bg-2.png')} 
 	    />
-	  ),
+		),
 	  headerTintColor: 'white'
 	});
 
