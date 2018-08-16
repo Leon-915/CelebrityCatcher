@@ -67,7 +67,7 @@ export default class CatcherProfile extends Component {
 				let userInfo   = Object.assign({}, this.state.userInfo);          //creating copy of object
 				userInfo.name  = responseJson.data.name;                        //updating value
 				userInfo.email = responseJson.data.email;                        //updating value
-				userInfo.id    = responseJson.data.id;                        //updating value
+				userInfo.userId    = responseJson.data.id;                        //updating value
 				this.setState({userInfo});
 				
 			}	else {
@@ -76,9 +76,36 @@ export default class CatcherProfile extends Component {
 		})
 		.catch((error) => {
 			 console.error(error);
-		});		
-
+		});	
 	}
+
+	// Followers Data
+	_goToFollowers() {
+		fetch('http://celebritycatcher.com/api/v1/followers/' + this.state.userInfo.userId, {
+			 method: 'GET',
+			 headers: {
+				'Content-Type'  : 'application/json',
+				'Authorization' : 'Bearer ' + this.props.navigation.state.params.token,
+			 },
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+				this.props.navigation.navigate('Followers', {
+					userId				  : this.state.userInfo.userId, 
+					followersData   : responseJson.data,
+					token  					: this.props.navigation.state.params.token
+				})
+				
+			}	else {
+				alert(responseJson.message);				
+			}
+		})
+		.catch((error) => {
+			 console.error(error);
+		});	
+	} 
 
 	_onHideUnderlayFollowers(){
 		this.setState({ pressStatusFollowers: false });
@@ -254,10 +281,7 @@ export default class CatcherProfile extends Component {
 
 					<View style={ styles.input }>
 						<TouchableHighlight style={{ borderRadius: 25 }} 
-							onPress={() => this.props.navigation.navigate('Followers', { 
-								userId			 : this.state.userInfo.userId, 
-								token		 : params.token,
-							 })}
+							onPress={ () => this._goToFollowers() }
 							onHideUnderlay={this._onHideUnderlayFollowers.bind(this)}
 							onShowUnderlay={this._onShowUnderlayFollowers.bind(this)} >
 

@@ -29,11 +29,166 @@ export default class Followers extends Component {
 	  headerTintColor: 'white'
 	});
 
-	indexChanged(index) {
-		alert(index);
+	constructor(props) {
+    super(props);
+    this.state = {
+			userInfo : {
+				userId 							 : "",
+				name  	 						 : "",
+			},
+
+			followersData : {},
+
+			mod0: 0,
+			mod1: 0,
+			mod2: 0,
+
+		}
 	}
 
+	componentDidMount() {
+		const { params } = this.props.navigation.state;
+
+		fetch('http://celebritycatcher.com/api/v1/followers/' + params.userId + '?page=2' , {
+			 method: 'GET',
+			 headers: {
+				'Content-Type'  : 'application/json',
+				'Authorization' : 'Bearer ' + params.token,
+			 },
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+				this.setState({followersData: responseJson.data});
+				
+				console.log(responseJson);
+				// if(responseJson.data.current)
+				
+			}	else {
+				alert(responseJson.message);				
+			}
+		})
+		.catch((error) => {
+			 console.error(error);
+		});	
+	} 
+
+	indexChanged(index) {
+	}
+
+
+
+	
 	render() {
+		const { params } = this.props.navigation.state;
+		followersList = <Text></Text>
+		followersList1 = <Text></Text>
+		followersList2 = <Text></Text>
+			
+		followersList = params.followersData.data.map(item => (
+			<TouchableOpacity key={item.id} style={styles.item}>
+				<View style={styles.itemTop}>
+					<View style={styles.itemLeft}>
+						<Image style={styles.photo}
+								source={require('../../images/carter.png')} />
+						<Text style={styles.itemLeftText}>{ item.name }</Text>
+					</View>
+
+					<View style={styles.followButton}>
+						<Image style={styles.buttonBg}
+							source={require('../../images/follow-button-bg.png')} />
+						
+						<View style={styles.buttonContent}>
+							<Image style={styles.personPlus}
+								source={require('../../images/person-plus-icon.png')} />
+							<Text style={styles.followText}>Follow</Text>
+						</View>
+							
+					</View>
+				</View>
+			</TouchableOpacity>
+		));
+
+		// if(this.state.mod0 === 0 && this.state.followersData) {
+		// 	console.log("=====in====")
+		// 	followersList = this.state.followersData.data.map(item => (
+		// 		<TouchableOpacity key={item.id} style={styles.item}>
+		// 			<View style={styles.itemTop}>
+		// 				<View style={styles.itemLeft}>
+		// 					<Image style={styles.photo}
+		// 							source={require('../../images/carter.png')} />
+		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
+		// 				</View>
+	
+		// 				<View style={styles.followButton}>
+		// 					<Image style={styles.buttonBg}
+		// 						source={require('../../images/follow-button-bg.png')} />
+							
+		// 					<View style={styles.buttonContent}>
+		// 						<Image style={styles.personPlus}
+		// 							source={require('../../images/person-plus-icon.png')} />
+		// 						<Text style={styles.followText}>Follow</Text>
+		// 					</View>
+								
+		// 				</View>
+		// 			</View>
+		// 		</TouchableOpacity>
+		// 	));
+		// }
+
+		// if(this.state.mod1 === 1 && this.state.followersData) {
+		// 	followersList1 = this.state.followersData.data.map(item => (
+		// 		<TouchableOpacity key={item.id} style={styles.item}>
+		// 			<View style={styles.itemTop}>
+		// 				<View style={styles.itemLeft}>
+		// 					<Image style={styles.photo}
+		// 							source={require('../../images/carter.png')} />
+		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
+		// 				</View>
+	
+		// 				<View style={styles.followButton}>
+		// 					<Image style={styles.buttonBg}
+		// 						source={require('../../images/follow-button-bg.png')} />
+							
+		// 					<View style={styles.buttonContent}>
+		// 						<Image style={styles.personPlus}
+		// 							source={require('../../images/person-plus-icon.png')} />
+		// 						<Text style={styles.followText}>Follow</Text>
+		// 					</View>
+								
+		// 				</View>
+		// 			</View>
+		// 		</TouchableOpacity>
+		// 	));
+		// }
+
+		// if(this.state.mod2 === 2 && this.state.followersData) {
+		// 	followersList2 = this.state.followersData.data.map(item => (
+		// 		<TouchableOpacity key={item.id} style={styles.item}>
+		// 			<View style={styles.itemTop}>
+		// 				<View style={styles.itemLeft}>
+		// 					<Image style={styles.photo}
+		// 							source={require('../../images/carter.png')} />
+		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
+		// 				</View>
+	
+		// 				<View style={styles.followButton}>
+		// 					<Image style={styles.buttonBg}
+		// 						source={require('../../images/follow-button-bg.png')} />
+							
+		// 					<View style={styles.buttonContent}>
+		// 						<Image style={styles.personPlus}
+		// 							source={require('../../images/person-plus-icon.png')} />
+		// 						<Text style={styles.followText}>Follow</Text>
+		// 					</View>
+								
+		// 				</View>
+		// 			</View>
+		// 		</TouchableOpacity>
+		// 	));
+		// }
+
 		return(
 			<View style={styles.container}>
 				
@@ -42,563 +197,206 @@ export default class Followers extends Component {
 						borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
 					activeDot={<View style={{backgroundColor: 'rgba(87,211,185,1)', width: 8, height: 5, 
 						borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3,}} />}
-					onIndexChanged={ index => this.indexChanged(index) }
+					onIndexChanged={ index => this.indexChanged(index) } 
+					loop={false}
 				>
 					
 					<View style={styles.container1}>
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
+						{ followersList }
 					</View>
 
 					<View style={styles.container1}>
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
+						{	followersList }
 					</View>
 
 					<View style={styles.container1}>
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
-
-						<View style={styles.item}>
-							<View style={styles.itemTop}>
-								<View style={styles.itemLeft}>
-									<Image style={styles.photo}
-											source={require('../../images/carter.png')} />
-									<Text style={styles.itemLeftText}>Jhon Doe</Text>
-								</View>
-
-								<View style={styles.followButton}>
-									<Image style={styles.buttonBg}
-										source={require('../../images/follow-button-bg.png')} />
-									
-									<View style={styles.buttonContent}>
-										<Image style={styles.personPlus}
-											source={require('../../images/person-plus-icon.png')} />
-										<Text style={styles.followText}>Follow</Text>
-									</View>
-										
-								</View>
-							</View>
-
-						</View>
+						{ followersList }
 					</View>
+
+					{/* <View style={styles.container1}>
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+
+						<View style={styles.item}>
+							<View style={styles.itemTop}>
+								<View style={styles.itemLeft}>
+									<Image style={styles.photo}
+											source={require('../../images/carter.png')} />
+									<Text style={styles.itemLeftText}>Jhon Doe</Text>
+								</View>
+
+								<View style={styles.followButton}>
+									<Image style={styles.buttonBg}
+										source={require('../../images/follow-button-bg.png')} />
+									
+									<View style={styles.buttonContent}>
+										<Image style={styles.personPlus}
+											source={require('../../images/person-plus-icon.png')} />
+										<Text style={styles.followText}>Follow</Text>
+									</View>
+										
+								</View>
+							</View>
+
+						</View>
+					</View> */}
 
 					
 				</Swiper>
