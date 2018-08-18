@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, 
-	Image, TextInput, CheckBox, Dimensions, Keyboard, Platform, ImageBackground } from 'react-native';
+	Image, TextInput, CheckBox, Dimensions, Keyboard, Platform, 
+	ImageBackground, KeyboardAvoidingView} from 'react-native';
 
 import BottomImage from '../BottomImage';
 
@@ -85,9 +86,9 @@ export default class PassReset extends Component {
 								resizeMode='contain' />
 				</View>
 	
-				<View style={styles.container2}>
-					<View>
-					<Text style={styles.description}>We just need your registration E-mail to send password reset link</Text>
+				<KeyboardAvoidingView behavior='padding' style={styles.container2}>
+					<View style={{paddingTop: 10}}>
+						<Text style={styles.description}>We just need your registration E-mail to send password reset link</Text>
 					</View>
 					
 					<View style={styles.email}>
@@ -101,7 +102,7 @@ export default class PassReset extends Component {
 						</TouchableOpacity>
 					</ImageBackground>
 					
-				</View>
+				</KeyboardAvoidingView>
 	
 				<BottomImage />
 			</View>	
@@ -121,7 +122,6 @@ const styles = StyleSheet.create({
     flex: 2,
 		justifyContent: 'center',
 		alignItems:'center',
-		// height: 100,
 	},
 
 	container2 : {
@@ -180,69 +180,3 @@ const styles = StyleSheet.create({
 });
 
 
-// import React, { Component } from 'react';
-// import {
-//     View, 
-//     Text, StyleSheet, Dimensions 
-// } from 'react-native';
-
-
-// import MenuList from './CatcherPhotos';
-// import MenuOverlay from './MenuOverlay';
-
-
-// export default class CatcherPassReset extends Component {
-//     render() {        
-//         let { 
-//             navigation,
-//             onToggleMenu 
-//         } = this.props
-
-//         return (
-//             <View style={styles.container}>
-//                 <MenuOverlay 
-//                     onToggleMenu={onToggleMenu}
-//                     navigation={navigation}
-//                 />
-//                 {/* <View style={styles.menu}>
-//                     <MenuList 
-//                         onToggleMenu={onToggleMenu}
-//                         navigation={navigation} 
-//                     />
-//                 </View> */}
-//             </View>
-//         );
-//     }
-// }
-
-
-// const styles = StyleSheet.create({
-//     container : {
-//         flex: 1,
-//         position : 'absolute',
-//         left: 0,
-//         top: 0,
-//         width : Dimensions.get('window').width, 
-//         height : Dimensions.get('window').height,
-//         paddingTop : 10,
-//         paddingLeft : 10,
-//         paddingRight : 10,
-//         paddingBottom : 10
-//     },
-//     menu: {
-//         flex: 1,
-//         backgroundColor: '#FFF',
-//         position : 'absolute',
-//         left: 0,
-//         top: 0,
-//         width : Dimensions.get('window').width * 0.5, 
-//         height : Dimensions.get('window').height,
-//         paddingTop : 10,
-//         paddingLeft : 10,
-//         paddingRight : 10,
-//         paddingBottom : 10
-//     },
-//     menuItem : {
-//         paddingTop : 10
-//     }
-// });

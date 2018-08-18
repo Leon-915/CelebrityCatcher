@@ -120,7 +120,7 @@ export default class CatcherLogin extends Component {
 			userInfo.name = (await response.json()).name;                        //updating value
 			this.setState({userInfo});
 
-			
+			console.log({token}.token);
 			
 			if(this.props.navigation.state.params.id === "Catcher" ) {
 				this.props.navigation.navigate('CatcherProfile', { 	
@@ -158,42 +158,64 @@ export default class CatcherLogin extends Component {
 			});
 
 			if (result.type === 'success') {
-				let userInfo = Object.assign({}, this.state.userInfo);    			//creating copy of object
-				userInfo.name = result.user.name;                       				//updating value
-				this.setState({userInfo});
+				// Calling function to send google token
+				this.sendGoogleToken(result.accessToken);
+			} else {
+				return {cancelled: true};
+			}
+		} catch(e) {
+			alert(4);
+			
+			return {error: true};
+		}
+	}
 
-				
+	// Sending token to server after Google login
+	sendGoogleToken(token) {
+		fetch('http://celebritycatcher.com/api/v1/auth/google/login?' + 
+			'provider=google&type' + this.state.type + '&token=' + token, {
+			method: 'GET',
+			headers: {
+				'Content-Type' : 'application/json',
+			},
+		})
+		.then((response) =>  response.json())
+		.then((responseJson) => {
+			
+			if(responseJson.status === 200) {
+				Keyboard.dismiss();
+
 				if(this.props.navigation.state.params.id === "Catcher" ) {
+
 					this.props.navigation.navigate('CatcherProfile', { 	
 							id			 : 'Catcher', 
-							token		 : result.accessToken,
-							userInfo : this.state.userInfo, 
+							token		 : responseJson.data.token,
 					});
 				}
 
 				if(this.props.navigation.state.params.id === "Subscriber" ) {
 					this.props.navigation.navigate('SubscriberProfile', { 
 						id			 : 'Subscriber', 
-						token		 : result.accessToken,
-						userInfo : this.state.userInfo, 
+						token		 : responseJson.data.token,
 					});
 				}
 
 				if(this.props.navigation.state.params.id === "Celebrity" ) {
 					this.props.navigation.navigate('CelebrityProfile', { 
 						id: 'Celebrity', 
-						token		 : result.accessToken,
-						userInfo : this.state.userInfo, 
+						token: responseJson.data.token,
 					});
 				}
-			} else {
-				return {cancelled: true};
+			}	else { 
+				alert(responseJson.message);
 			}
-		} catch(e) {
-			return {error: true};
-		}
+		})
+		.catch((error) => {
+			console.error(error);
+		});
 	}
 
+	// Validation Function
 	onTypeText(text, type) {
 		if(type == "email") {
 			this.setState({ emailValid: true });

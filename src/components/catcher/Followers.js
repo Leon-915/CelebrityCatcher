@@ -37,11 +37,12 @@ export default class Followers extends Component {
 				name  	 						 : "",
 			},
 
-			followersData : {},
+			followersData : { data: [] },
 
-			mod0: 0,
-			mod1: 0,
-			mod2: 0,
+			mod : 1,
+
+			pageNo 			 : 0,
+			current_page : 1,
 
 		}
 	}
@@ -49,7 +50,7 @@ export default class Followers extends Component {
 	componentDidMount() {
 		const { params } = this.props.navigation.state;
 
-		fetch('http://celebritycatcher.com/api/v1/followers/' + params.userId + '?page=2' , {
+		fetch('http://celebritycatcher.com/api/v1/followers/' + params.userId , {
 			 method: 'GET',
 			 headers: {
 				'Content-Type'  : 'application/json',
@@ -60,10 +61,7 @@ export default class Followers extends Component {
 		.then((responseJson) => {
 			
 			if(responseJson.status === 200) {
-				this.setState({followersData: responseJson.data});
-				
-				console.log(responseJson);
-				// if(responseJson.data.current)
+				this.setState({followersData : responseJson.data});
 				
 			}	else {
 				alert(responseJson.message);				
@@ -75,6 +73,87 @@ export default class Followers extends Component {
 	} 
 
 	indexChanged(index) {
+		const { params } = this.props.navigation.state;
+		
+		if(this.state.pageNo < index) {
+			this.setState({ pageNo : index });
+
+			fetch('http://celebritycatcher.com/api/v1/followers/' + params.userId + 
+				"?page=" + (this.state.current_page + 1)  , {
+				
+				method: 'GET',
+				headers: {
+					'Content-Type'  : 'application/json',
+					'Authorization' : 'Bearer ' + params.token,
+				},
+			})
+			.then((response) =>  response.json())
+			.then((responseJson) => {
+				
+				if(responseJson.status === 200) {
+					this.setState({followersData : responseJson.data});
+					this.setState({ current_page : responseJson.data.current_page });
+					
+					if(responseJson.data.current_page % 3 === 1) {
+						this.setState({ mod : 1 });
+					}
+
+					if(responseJson.data.current_page % 3 === 2) {
+						this.setState({ mod : 2 });
+					}
+
+					if(responseJson.data.current_page % 3 === 0) {
+						this.setState({ mod : 0 });
+					}
+					
+				}	else {
+					alert(responseJson.message);				
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});	
+		}
+		if (this.state.pageNo > index) {
+			this.setState({ pageNo : index });
+
+			fetch('http://celebritycatcher.com/api/v1/followers/' + params.userId + 
+				"?page=" + (this.state.current_page - 1) , {
+			
+				method: 'GET',
+				headers: {
+					'Content-Type'  : 'application/json',
+					'Authorization' : 'Bearer ' + params.token,
+				},
+			})
+			.then((response) =>  response.json())
+			.then((responseJson) => {
+				
+				if(responseJson.status === 200) {
+					this.setState({followersData : responseJson.data});
+					this.setState({ current_page : responseJson.data.current_page });
+					
+					if(responseJson.data.current_page % 3 === 1) {
+						this.setState({ mod : 1 });
+					}
+
+					if(responseJson.data.current_page % 3 === 2) {
+						this.setState({ mod : 2 });
+					}
+
+					if(responseJson.data.current_page % 3 === 0) {
+						this.setState({ mod : 0 });
+					}
+					
+				}	else {
+					alert(responseJson.message);				
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});	
+		}
+		
 	}
 
 
@@ -82,112 +161,87 @@ export default class Followers extends Component {
 	
 	render() {
 		const { params } = this.props.navigation.state;
-		followersList = <Text></Text>
 		followersList1 = <Text></Text>
 		followersList2 = <Text></Text>
-			
-		followersList = params.followersData.data.map(item => (
-			<TouchableOpacity key={item.id} style={styles.item}>
-				<View style={styles.itemTop}>
-					<View style={styles.itemLeft}>
-						<Image style={styles.photo}
-								source={require('../../images/carter.png')} />
-						<Text style={styles.itemLeftText}>{ item.name }</Text>
-					</View>
+		followersList3 = <Text></Text>
 
-					<View style={styles.followButton}>
-						<Image style={styles.buttonBg}
-							source={require('../../images/follow-button-bg.png')} />
-						
-						<View style={styles.buttonContent}>
-							<Image style={styles.personPlus}
-								source={require('../../images/person-plus-icon.png')} />
-							<Text style={styles.followText}>Follow</Text>
+		if(this.state.mod === 1) {
+			followersList1 = this.state.followersData.data.map(item => (
+				<View key={item.id} style={styles.item}>
+					<View style={styles.itemTop}>
+						<View style={styles.itemLeft}>
+							<Image style={styles.photo}
+									source={require('../../images/carter.png')} />
+							<Text style={styles.itemLeftText}>{ item.name }</Text>
 						</View>
+	
+						<TouchableOpacity style={styles.followButton}>
+							<Image style={styles.buttonBg}
+								source={require('../../images/follow-button-bg.png')} />
 							
+							<View style={styles.buttonContent}>
+								<Image style={styles.personPlus}
+									source={require('../../images/person-plus-icon.png')} />
+								<Text style={styles.followText}>Follow</Text>
+							</View>
+								
+						</TouchableOpacity>
 					</View>
 				</View>
-			</TouchableOpacity>
-		));
+			));
+		}
 
-		// if(this.state.mod0 === 0 && this.state.followersData) {
-		// 	console.log("=====in====")
-		// 	followersList = this.state.followersData.data.map(item => (
-		// 		<TouchableOpacity key={item.id} style={styles.item}>
-		// 			<View style={styles.itemTop}>
-		// 				<View style={styles.itemLeft}>
-		// 					<Image style={styles.photo}
-		// 							source={require('../../images/carter.png')} />
-		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
-		// 				</View>
+		if(this.state.mod === 2) {
+			followersList2 = this.state.followersData.data.map(item => (
+				<View key={item.id} style={styles.item}>
+					<View style={styles.itemTop}>
+						<View style={styles.itemLeft}>
+							<Image style={styles.photo}
+									source={require('../../images/carter.png')} />
+							<Text style={styles.itemLeftText}>{ item.name }</Text>
+						</View>
 	
-		// 				<View style={styles.followButton}>
-		// 					<Image style={styles.buttonBg}
-		// 						source={require('../../images/follow-button-bg.png')} />
+						<TouchableOpacity style={styles.followButton}>
+							<Image style={styles.buttonBg}
+								source={require('../../images/follow-button-bg.png')} />
 							
-		// 					<View style={styles.buttonContent}>
-		// 						<Image style={styles.personPlus}
-		// 							source={require('../../images/person-plus-icon.png')} />
-		// 						<Text style={styles.followText}>Follow</Text>
-		// 					</View>
+							<View style={styles.buttonContent}>
+								<Image style={styles.personPlus}
+									source={require('../../images/person-plus-icon.png')} />
+								<Text style={styles.followText}>Follow</Text>
+							</View>
 								
-		// 				</View>
-		// 			</View>
-		// 		</TouchableOpacity>
-		// 	));
-		// }
+						</TouchableOpacity>
+					</View>
+				</View>
+			));
+		}
 
-		// if(this.state.mod1 === 1 && this.state.followersData) {
-		// 	followersList1 = this.state.followersData.data.map(item => (
-		// 		<TouchableOpacity key={item.id} style={styles.item}>
-		// 			<View style={styles.itemTop}>
-		// 				<View style={styles.itemLeft}>
-		// 					<Image style={styles.photo}
-		// 							source={require('../../images/carter.png')} />
-		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
-		// 				</View>
+		if(this.state.mod === 0) {
+			followersList3 = this.state.followersData.data.map(item => (
+				<View key={item.id} style={styles.item}>
+					<View style={styles.itemTop}>
+						<View style={styles.itemLeft}>
+							<Image style={styles.photo}
+									source={require('../../images/carter.png')} />
+							<Text style={styles.itemLeftText}>{ item.name }</Text>
+						</View>
 	
-		// 				<View style={styles.followButton}>
-		// 					<Image style={styles.buttonBg}
-		// 						source={require('../../images/follow-button-bg.png')} />
+						<TouchableOpacity style={styles.followButton}>
+							<Image style={styles.buttonBg}
+								source={require('../../images/follow-button-bg.png')} />
 							
-		// 					<View style={styles.buttonContent}>
-		// 						<Image style={styles.personPlus}
-		// 							source={require('../../images/person-plus-icon.png')} />
-		// 						<Text style={styles.followText}>Follow</Text>
-		// 					</View>
+							<View style={styles.buttonContent}>
+								<Image style={styles.personPlus}
+									source={require('../../images/person-plus-icon.png')} />
+								<Text style={styles.followText}>Follow</Text>
+							</View>
 								
-		// 				</View>
-		// 			</View>
-		// 		</TouchableOpacity>
-		// 	));
-		// }
-
-		// if(this.state.mod2 === 2 && this.state.followersData) {
-		// 	followersList2 = this.state.followersData.data.map(item => (
-		// 		<TouchableOpacity key={item.id} style={styles.item}>
-		// 			<View style={styles.itemTop}>
-		// 				<View style={styles.itemLeft}>
-		// 					<Image style={styles.photo}
-		// 							source={require('../../images/carter.png')} />
-		// 					<Text style={styles.itemLeftText}>{ item.name }</Text>
-		// 				</View>
-	
-		// 				<View style={styles.followButton}>
-		// 					<Image style={styles.buttonBg}
-		// 						source={require('../../images/follow-button-bg.png')} />
-							
-		// 					<View style={styles.buttonContent}>
-		// 						<Image style={styles.personPlus}
-		// 							source={require('../../images/person-plus-icon.png')} />
-		// 						<Text style={styles.followText}>Follow</Text>
-		// 					</View>
-								
-		// 				</View>
-		// 			</View>
-		// 		</TouchableOpacity>
-		// 	));
-		// }
+						</TouchableOpacity>
+					</View>
+				</View>
+			));
+		}
 
 		return(
 			<View style={styles.container}>
@@ -202,15 +256,15 @@ export default class Followers extends Component {
 				>
 					
 					<View style={styles.container1}>
-						{ followersList }
+						{ followersList1 }
 					</View>
 
 					<View style={styles.container1}>
-						{	followersList }
+						{	followersList2 }
 					</View>
 
 					<View style={styles.container1}>
-						{ followersList }
+						{ followersList3 }
 					</View>
 
 					{/* <View style={styles.container1}>
